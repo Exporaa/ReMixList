@@ -23,4 +23,7 @@ Aplikasi ini memanipulasi atribut waktu (*timestamp*) pada file audio secara oto
 4. Pilih Hari -> Bebas (sampai 999).
 5. Auto-Correct: Kalau lu lagi isi angka "90", terus lu ganti satuannya ke "Menit", angkanya otomatis turun ke "59" biar gak error.
 
+
+<img width="690" height="977" alt="image" src="https://github.com/user-attachments/assets/2809aeae-e8ad-48d5-a38a-9f963257a36d" />
+
 Cara pakai: Tinggal download yang (ReMixList.Exe) yang tertera, dan langsung pakai
