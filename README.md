@@ -14,5 +14,17 @@ Aplikasi ini memanipulasi atribut waktu (*timestamp*) pada file audio secara oto
 * **Custom Interval:** Mengatur jarak waktu antar lagu (Detik, Menit, Jam, Hari).
 * **Advanced Timestamp:** Mampu mengubah *Date Modified* dan *Date Created* (via Windows Kernel Access).
 
+ReMixList v2.1.
+
+Perubahan Logic:
+Interval Dinamis: Batas angka di kotak interval akan berubah otomatis tergantung satuan yang dipilih.
+
+Pilih Detik/Menit -> Mentok di 59 (dan wrap/muter ke 0).
+
+Pilih Jam -> Mentok di 23.
+
+Pilih Hari -> Bebas (sampai 999).
+
+Auto-Correct: Kalau lu lagi isi angka "90", terus lu ganti satuannya ke "Menit", angkanya otomatis turun ke "59" biar gak error.
 
 Cara pakai: Tinggal download yang (ReMixList.Exe) yang tertera, dan langsung pakai
