@@ -11,7 +11,7 @@ import calendar
 # --- KAMUS BAHASA (DICTIONARY) ---
 TRANSLATIONS = {
     "en": {
-        "app_title": "ReMixList v1.1",
+        "app_title": "ReMixList v2.1",
         "sub_title": "by Expora",
         "frame_1": "1. Select Music Folder",
         "btn_browse": "Browse...",
@@ -41,7 +41,7 @@ TRANSLATIONS = {
         "help_body": "Go to 'Language' menu at the top to change interface language."
     },
     "id": {
-        "app_title": "ReMixList v1.1",
+        "app_title": "ReMixList v2.1",
         "sub_title": "oleh Expora",
         "frame_1": "1. Pilih Lokasi Folder Lagu",
         "btn_browse": "Cari...",
@@ -71,7 +71,7 @@ TRANSLATIONS = {
         "help_body": "Buka menu 'Bahasa' di bagian atas untuk mengganti bahasa aplikasi."
     },
     "jp": {
-        "app_title": "ReMixList v1.1",
+        "app_title": "ReMixList v2.1",
         "sub_title": "Expora作",
         "frame_1": "1. 音楽フォルダを選択",
         "btn_browse": "参照...",
@@ -101,7 +101,7 @@ TRANSLATIONS = {
         "help_body": "上部の「言語」メニューからインターフェース言語を変更できます。"
     },
     "cn": {
-        "app_title": "ReMixList v1.1",
+        "app_title": "ReMixList v2.1",
         "sub_title": "Expora 制作",
         "frame_1": "1. 选择音乐文件夹",
         "btn_browse": "浏览...",
@@ -131,7 +131,7 @@ TRANSLATIONS = {
         "help_body": "请使用顶部的“语言”菜单更改界面语言。"
     },
     "ru": {
-        "app_title": "ReMixList v1.1",
+        "app_title": "ReMixList v2.1",
         "sub_title": "от Expora",
         "frame_1": "1. Выберите папку с музыкой",
         "btn_browse": "Обзор...",
@@ -187,7 +187,7 @@ class AudioShufflerApp:
         style = ttk.Style()
         style.configure("TLabel", font=("Segoe UI", 9))
 
-        # --- MENU BAR (FITUR BARU) ---
+        # --- MENU BAR ---
         self.menu_bar = tk.Menu(root)
         root.config(menu=self.menu_bar)
         self.setup_menu()
@@ -216,16 +216,21 @@ class AudioShufflerApp:
         self.btn_set_now_mod.pack(anchor="e", pady=2)
         self.mod_entries, self.mod_vars = self.create_date_inputs(self.fr_2)
 
-        # AREA 3
+        # AREA 3 (UPDATED LOGIC)
         self.fr_3 = tk.LabelFrame(root, font=("Segoe UI", 9, "bold"), padx=10, pady=10)
         self.fr_3.pack(fill="x", padx=15, pady=5)
         self.lbl_interval = tk.Label(self.fr_3)
         self.lbl_interval.pack(side="left")
-        self.interval_val = tk.Spinbox(self.fr_3, from_=0, to=999, width=5)
+        
+        # Spinbox dengan wrap=True
+        self.interval_val = tk.Spinbox(self.fr_3, from_=1, to=59, width=5, wrap=True)
         self.interval_val.delete(0, "end"); self.interval_val.insert(0, "1")
         self.interval_val.pack(side="left", padx=5)
+        
         self.interval_unit = ttk.Combobox(self.fr_3, state="readonly", width=8)
         self.interval_unit.pack(side="left")
+        # Bind event ketika user ganti satuan (Detik/Menit/Jam)
+        self.interval_unit.bind("<<ComboboxSelected>>", self.update_interval_limit)
 
         # AREA 4
         self.fr_4 = tk.LabelFrame(root, font=("Segoe UI", 9, "bold"), padx=10, pady=10, fg="blue")
@@ -261,7 +266,6 @@ class AudioShufflerApp:
 
     # --- SETUP MENU BAR ---
     def setup_menu(self):
-        # Menu Language
         self.lang_menu = tk.Menu(self.menu_bar, tearoff=0)
         self.menu_bar.add_cascade(label="Language", menu=self.lang_menu)
         
@@ -276,7 +280,6 @@ class AudioShufflerApp:
         for text, code in languages:
             self.lang_menu.add_radiobutton(label=text, variable=self.lang_var, value=code, command=self.on_lang_change)
 
-        # Menu Help
         self.help_menu = tk.Menu(self.menu_bar, tearoff=0)
         self.menu_bar.add_cascade(label="Help", menu=self.help_menu)
         self.help_menu.add_command(label="Info", command=self.show_help)
@@ -288,18 +291,15 @@ class AudioShufflerApp:
         self.lang_code = code
         t = TRANSLATIONS[code]
 
-        # Update Titles
         self.root.title(t["app_title"])
         self.lbl_title.config(text=t["app_title"])
         self.lbl_subtitle.config(text=t["sub_title"])
 
-        # Update Frames
         self.fr_1.config(text=t["frame_1"])
         self.fr_2.config(text=t["frame_2"])
         self.fr_3.config(text=t["frame_3"])
         self.fr_4.config(text=t["frame_4"])
 
-        # Update Buttons & Labels
         self.btn_browse.config(text=t["btn_browse"])
         self.btn_clear.config(text=t["btn_clear"])
         self.btn_set_now_mod.config(text=t["btn_set_now"])
@@ -311,36 +311,54 @@ class AudioShufflerApp:
         self.btn_run.config(text=t["btn_run"])
         self.status_label.config(text=t["status_ready"])
 
-        # Update Interval Units (Combobox)
+        # Update Interval Units
         current_idx = self.interval_unit.current()
         self.interval_unit.config(values=t["units"])
-        if current_idx == -1: current_idx = 1 # Default Menit
+        if current_idx == -1: current_idx = 1
         self.interval_unit.current(current_idx)
+        
+        # PENTING: Update Limit Interval setelah ganti bahasa (biar konsisten)
+        self.update_interval_limit()
 
-        # Update Menu Labels
         self.menu_bar.entryconfig(1, label=t["menu_lang"])
         self.menu_bar.entryconfig(2, label=t["menu_help"])
 
-        # Update Date Labels (Small Inputs)
-        # Note: We need to update labels inside create_date_inputs
         keys = ["lbl_thn", "lbl_bln", "lbl_tgl", "lbl_jam", "lbl_mnt", "lbl_dtk"]
-        # Helper to recursive update labels inside frames
         self.update_date_labels(self.mod_entries, t, keys)
         self.update_date_labels(self.cre_entries, t, keys)
 
     def update_date_labels(self, entries_dict, t, keys):
-        # entries_dict = {'Thn': SpinboxWidget, ...}
-        # But we need to access the Label widget which is the sibling of Spinbox
-        # Structure: Frame -> [Label, Spinbox]
         label_map = {
             "Thn": t["lbl_thn"], "Bln": t["lbl_bln"], "Tgl": t["lbl_tgl"],
             "Jam": t["lbl_jam"], "Mnt": t["lbl_mnt"], "Dtk": t["lbl_dtk"]
         }
         for key, widget in entries_dict.items():
-            parent = widget.master # The small frame containing Label & Spinbox
+            parent = widget.master
             for child in parent.winfo_children():
                 if isinstance(child, tk.Label):
                     child.config(text=label_map[key])
+    
+    # --- LOGIKA BARU: UPDATE INTERVAL LIMIT ---
+    def update_interval_limit(self, event=None):
+        idx = self.interval_unit.current()
+        # 0=Sec, 1=Min, 2=Hour, 3=Day
+        
+        limit = 999
+        if idx == 0 or idx == 1: # Detik atau Menit
+            limit = 59
+        elif idx == 2: # Jam
+            limit = 23
+        # Kalau Hari (idx 3) tetap 999
+        
+        self.interval_val.config(to=limit)
+        
+        # Cek kalau angka sekarang melebihi limit baru, turunkan
+        try:
+            curr = int(self.interval_val.get())
+            if curr > limit:
+                self.interval_val.delete(0, "end")
+                self.interval_val.insert(0, str(limit))
+        except: pass
 
     def show_help(self):
         t = TRANSLATIONS[self.lang_code]
@@ -377,7 +395,7 @@ class AudioShufflerApp:
         for i, (lbl, default) in enumerate(zip(labels, defaults)):
             f = tk.Frame(frame)
             f.grid(row=0, column=i, padx=2)
-            tk.Label(f, text=lbl, font=("Arial", 7)).pack() # Text will be updated by change_language
+            tk.Label(f, text=lbl, font=("Arial", 7)).pack()
             
             min_val, max_val = limits[lbl]
             var = tk.IntVar(value=default)
@@ -434,7 +452,7 @@ class AudioShufflerApp:
         if f: self.path_var.set(f)
 
     def run_shuffle(self):
-        t = TRANSLATIONS[self.lang_code] # Get current language dict
+        t = TRANSLATIONS[self.lang_code]
         
         folder = self.path_var.get()
         if not folder or not os.path.exists(folder):
@@ -470,7 +488,6 @@ class AudioShufflerApp:
             random.shuffle(files)
             
             val = int(self.interval_val.get())
-            # Use index because text changes per language
             unit_idx = self.interval_unit.current() 
             
             delta = timedelta(seconds=0)
