@@ -26,4 +26,4 @@ Aplikasi ini memanipulasi atribut waktu (*timestamp*) pada file audio secara oto
 
 <img width="690" height="977" alt="image" src="https://github.com/user-attachments/assets/2809aeae-e8ad-48d5-a38a-9f963257a36d" />
 
-Cara pakai: Tinggal download yang (ReMixList.Exe) yang tertera, dan langsung pakai
+**Cara pakai: Tinggal download yang (ReMixList.Exe) yang tertera, dan langsung pakai**
