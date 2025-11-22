@@ -13,6 +13,8 @@ Aplikasi ini memanipulasi atribut waktu (*timestamp*) pada file audio secara oto
 * **Deep Scan:** Mendeteksi file lagu hingga ke dalam sub-folder.
 * **Custom Interval:** Mengatur jarak waktu antar lagu (Detik, Menit, Jam, Hari).
 * **Advanced Timestamp:** Mampu mengubah *Date Modified* dan *Date Created* (via Windows Kernel Access).
+  
+<img width="690" height="977" alt="image" src="https://github.com/user-attachments/assets/6f426acf-4a94-4a6c-8f05-a65225852489" />
 
 ## ReMixList v2.1.
 
@@ -23,7 +25,5 @@ Aplikasi ini memanipulasi atribut waktu (*timestamp*) pada file audio secara oto
 4. Pilih Hari -> Bebas (sampai 999).
 5. Auto-Correct: Kalau lu lagi isi angka "90", terus lu ganti satuannya ke "Menit", angkanya otomatis turun ke "59" biar gak error.
 
-
-<img width="690" height="977" alt="image" src="https://github.com/user-attachments/assets/2809aeae-e8ad-48d5-a38a-9f963257a36d" />
 
 **Cara pakai: Tinggal download yang (ReMixList.Exe) yang tertera, dan langsung pakai**
