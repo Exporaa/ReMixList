@@ -11,8 +11,8 @@ import calendar
 # --- KAMUS BAHASA (DICTIONARY) ---
 TRANSLATIONS = {
     "en": {
-        "app_title": "ReMixList v2.0",
-        "sub_title": "by Expora (Multi-Language Edition)",
+        "app_title": "ReMixList v1.1",
+        "sub_title": "by Expora",
         "frame_1": "1. Select Music Folder",
         "btn_browse": "Browse...",
         "btn_clear": "Clear",
@@ -41,8 +41,8 @@ TRANSLATIONS = {
         "help_body": "Go to 'Language' menu at the top to change interface language."
     },
     "id": {
-        "app_title": "ReMixList v2.0",
-        "sub_title": "oleh Expora (Edisi Multi-Bahasa)",
+        "app_title": "ReMixList v1.1",
+        "sub_title": "oleh Expora",
         "frame_1": "1. Pilih Lokasi Folder Lagu",
         "btn_browse": "Cari...",
         "btn_clear": "Hapus",
@@ -71,8 +71,8 @@ TRANSLATIONS = {
         "help_body": "Buka menu 'Bahasa' di bagian atas untuk mengganti bahasa aplikasi."
     },
     "jp": {
-        "app_title": "ReMixList v2.0",
-        "sub_title": "Expora作 (多言語版)",
+        "app_title": "ReMixList v1.1",
+        "sub_title": "Expora作",
         "frame_1": "1. 音楽フォルダを選択",
         "btn_browse": "参照...",
         "btn_clear": "クリア",
@@ -101,8 +101,8 @@ TRANSLATIONS = {
         "help_body": "上部の「言語」メニューからインターフェース言語を変更できます。"
     },
     "cn": {
-        "app_title": "ReMixList v2.0",
-        "sub_title": "Expora 制作 (多语言版)",
+        "app_title": "ReMixList v1.1",
+        "sub_title": "Expora 制作",
         "frame_1": "1. 选择音乐文件夹",
         "btn_browse": "浏览...",
         "btn_clear": "清除",
@@ -131,8 +131,8 @@ TRANSLATIONS = {
         "help_body": "请使用顶部的“语言”菜单更改界面语言。"
     },
     "ru": {
-        "app_title": "ReMixList v2.0",
-        "sub_title": "от Expora (Мультиязычная версия)",
+        "app_title": "ReMixList v1.1",
+        "sub_title": "от Expora",
         "frame_1": "1. Выберите папку с музыкой",
         "btn_browse": "Обзор...",
         "btn_clear": "Очистить",
