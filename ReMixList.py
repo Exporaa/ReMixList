@@ -7,282 +7,373 @@ from datetime import datetime, timedelta
 import ctypes
 from ctypes import wintypes
 import calendar
+import re
 
-# --- KAMUS BAHASA (DICTIONARY) ---
+# --- SETUP LIBRARY DRAG & DROP ---
+try:
+    from tkinterdnd2 import DND_FILES, TkinterDnD
+except ImportError:
+    messagebox.showerror("Error", "Library 'tkinterdnd2' belum diinstall!\nKetik di CMD: pip install tkinterdnd2")
+    raise SystemExit
+
+# --- KAMUS BAHASA (DICTIONARY) v3.1 ---
 TRANSLATIONS = {
     "en": {
-        "app_title": "ReMixList v2.1",
+        "app_title": "ReMixList v3.1",
         "sub_title": "by Expora",
+        "tab_file": "🎵 Shuffle Files",
+        "tab_folder": "📂 Sort Folders",
         "frame_1": "1. Select Music Folder",
         "btn_browse": "Browse...",
         "btn_clear": "Clear",
-        "frame_2": "2. Date Modified (Primary Time)",
+        "frame_2": "2. Start Time",
         "btn_set_now": "Set to Now",
-        "frame_3": "3. Interval Between Songs",
-        "lbl_interval": "Time gap per song:",
+        "frame_3": "3. Interval",
+        "lbl_interval": "Gap per item:",
         "units": ["Seconds", "Minutes", "Hours", "Days"],
-        "frame_4": "4. Date Created Settings (Optional)",
+        "frame_4": "4. Date Created (Optional)",
         "chk_create": "Change 'Date Created' too?",
-        "rb_sync": "Sync with Date Modified (Simple)",
-        "rb_custom": "Set Custom Time (Advanced)",
-        "btn_run": "SHUFFLE NOW!",
+        "rb_sync": "Sync with Modified",
+        "rb_custom": "Custom Time",
+        "btn_run_file": "SHUFFLE FILES!",
+        
+        # Tab 2
+        "lbl_folder_list": "1. Folder List:",
+        "lbl_tip": "💡 Tip: Drag folders here to add them.",
+        "btn_add_folder": "Add Folder",
+        "btn_remove": "Remove",
+        "btn_up": "Up",
+        "btn_down": "Down",
+        "btn_clear_list": "Clear",
+        "frame_int_folder": "3a. Interval Between FOLDERS",
+        "lbl_int_folder": "Base Gap per Folder:",
+        "frame_int_file": "3b. Interval Between FILES (Inside)",
+        "lbl_int_file": "Gap per File:",
+        "frame_4_folder": "4. Folder 'Date Created' (Optional)",
+        "frame_opts": "5. Content Options",
+        "chk_sync_content": "Process files inside?",
+        "lbl_sync_hint": "(Files will match the Folder's new timestamps)",
+        "btn_run_folder": "PROCESS FOLDERS!",
         "status_ready": "Ready...",
         "status_working": "Working...",
         "status_done": "Done!",
-        "msg_folder_err": "Folder not found or empty!",
-        "msg_date_err": "Invalid Date format!",
-        "msg_confirm_title": "Start Shuffle?",
-        "msg_confirm_body": "Target: {}\nStart Time: {}\n\nProceed?",
-        "msg_success": "Successfully processed {} songs!",
-        "msg_empty": "No audio files found!",
-        "lbl_thn": "Yr", "lbl_bln": "Mo", "lbl_tgl": "Day", 
-        "lbl_jam": "Hr", "lbl_mnt": "Min", "lbl_dtk": "Sec",
+        "msg_success": "Success! Processed {} items.",
+        "msg_folder_err": "Select at least one folder!",
+        "msg_date_err": "Invalid Date!",
+        "msg_smart_title": "Smart Import",
+        "msg_smart_body": "Found {} sub-folders in '{}'. Add them individually?",
+        "lbl_thn": "Yr", "lbl_bln": "Mo", "lbl_tgl": "Day", "lbl_jam": "Hr", "lbl_mnt": "Min", "lbl_dtk": "Sec",
         "menu_lang": "Language", "menu_help": "Help", 
-        "help_body": "Go to 'Language' menu at the top to change interface language."
+        "help_body": "v3.1 Update: Folder 'Created Date' now correctly follows the Smart Interval logic (skips time if folder content is large)."
     },
     "id": {
-        "app_title": "ReMixList v2.1",
+        "app_title": "ReMixList v3.1",
         "sub_title": "oleh Expora",
-        "frame_1": "1. Pilih Lokasi Folder Lagu",
+        "tab_file": "🎵 Acak File",
+        "tab_folder": "📂 Urutkan Folder",
+        "frame_1": "1. Pilih Folder Lagu",
         "btn_browse": "Cari...",
         "btn_clear": "Hapus",
-        "frame_2": "2. Waktu Modified (Waktu Utama)",
-        "btn_set_now": "Set Waktu Sekarang",
-        "frame_3": "3. Jarak Antar Lagu (Interval)",
-        "lbl_interval": "Jeda setiap lagu:",
+        "frame_2": "2. Waktu Mulai",
+        "btn_set_now": "Waktu Sekarang",
+        "frame_3": "3. Jarak Waktu (Interval)",
+        "lbl_interval": "Jeda per item:",
         "units": ["Detik", "Menit", "Jam", "Hari"],
-        "frame_4": "4. Pengaturan Date Created (Opsional)",
+        "frame_4": "4. Date Created (Opsional)",
         "chk_create": "Ubah juga 'Date Created'?",
-        "rb_sync": "Samakan dengan Date Modified (Simpel)",
-        "rb_custom": "Atur Waktu Sendiri (Advanced)",
-        "btn_run": "EKSEKUSI SEMUA!",
+        "rb_sync": "Samakan dengan Modified",
+        "rb_custom": "Atur Sendiri",
+        "btn_run_file": "ACAK FILE SEKARANG!",
+        "lbl_folder_list": "Daftar Folder:",
+        "lbl_tip": "💡 Tips: Drag & Drop folder ke sini.",
+        "btn_add_folder": "Tambah Folder (Pintar)",
+        "btn_remove": "Hapus",
+        "btn_up": "Naik",
+        "btn_down": "Turun",
+        "btn_clear_list": "Reset",
+        "frame_int_folder": "3a. Interval Antar FOLDER",
+        "lbl_int_folder": "Jeda Dasar Folder:",
+        "frame_int_file": "3b. Interval Antar FILE (Isi Folder)",
+        "lbl_int_file": "Jeda Lagu 1 ke 2:",
+        "frame_4_folder": "4. 'Date Created' Folder (Opsional)",
+        "frame_opts": "5. Opsi Isi Folder",
+        "chk_sync_content": "Proses file di dalamnya?",
+        "lbl_sync_hint": "(File akan mengikuti waktu baru Folder)",
+        "btn_run_folder": "PROSES FOLDER!",
         "status_ready": "Siap...",
         "status_working": "Sedang bekerja...",
         "status_done": "Selesai!",
-        "msg_folder_err": "Folder tidak ditemukan/kosong!",
+        "msg_success": "Berhasil! Memproses {} item.",
+        "msg_folder_err": "Pilih minimal satu folder!",
         "msg_date_err": "Format tanggal salah!",
-        "msg_confirm_title": "Mulai Acak?",
-        "msg_confirm_body": "Target: {}\nWaktu Mulai: {}\n\nLanjut?",
-        "msg_success": "Berhasil memproses {} lagu!",
-        "msg_empty": "Tidak ada file lagu ditemukan!",
-        "lbl_thn": "Thn", "lbl_bln": "Bln", "lbl_tgl": "Tgl", 
-        "lbl_jam": "Jam", "lbl_mnt": "Mnt", "lbl_dtk": "Dtk",
+        "msg_smart_title": "Import Pintar",
+        "msg_smart_body": "Ditemukan {} sub-folder di '{}'. Masukkan satu per satu?",
+        "lbl_thn": "Thn", "lbl_bln": "Bln", "lbl_tgl": "Tgl", "lbl_jam": "Jam", "lbl_mnt": "Mnt", "lbl_dtk": "Dtk",
         "menu_lang": "Bahasa", "menu_help": "Bantuan",
-        "help_body": "Buka menu 'Bahasa' di bagian atas untuk mengganti bahasa aplikasi."
+        "help_body": "Update v3.1: 'Date Created' Folder sekarang ikut pintar (otomatis loncat waktu jika isi folder penuh)."
     },
-    "jp": {
-        "app_title": "ReMixList v2.1",
-        "sub_title": "Expora作",
-        "frame_1": "1. 音楽フォルダを選択",
-        "btn_browse": "参照...",
-        "btn_clear": "クリア",
-        "frame_2": "2. 更新日時 (メイン)",
-        "btn_set_now": "現在時刻に設定",
-        "frame_3": "3. 曲の間隔 (インターバル)",
-        "lbl_interval": "曲ごとの間隔:",
-        "units": ["秒", "分", "時間", "日"],
-        "frame_4": "4. 作成日時の設定 (オプション)",
-        "chk_create": "「作成日時」も変更しますか？",
-        "rb_sync": "更新日時と同じにする (簡単)",
-        "rb_custom": "自分で時間を設定 (詳細)",
-        "btn_run": "シャッフル開始！",
-        "status_ready": "準備完了...",
-        "status_working": "処理中...",
-        "status_done": "完了！",
-        "msg_folder_err": "フォルダが見つからないか、空です！",
-        "msg_date_err": "日付の形式が無効です！",
-        "msg_confirm_title": "開始しますか？",
-        "msg_confirm_body": "対象: {}\n開始時間: {}\n\n実行しますか？",
-        "msg_success": "{} 曲の処理に成功しました！",
-        "msg_empty": "音声ファイルが見つかりません！",
-        "lbl_thn": "年", "lbl_bln": "月", "lbl_tgl": "日", 
-        "lbl_jam": "時", "lbl_mnt": "分", "lbl_dtk": "秒",
-        "menu_lang": "言語 (Language)", "menu_help": "ヘルプ",
-        "help_body": "上部の「言語」メニューからインターフェース言語を変更できます。"
-    },
-    "cn": {
-        "app_title": "ReMixList v2.1",
-        "sub_title": "Expora 制作",
-        "frame_1": "1. 选择音乐文件夹",
-        "btn_browse": "浏览...",
-        "btn_clear": "清除",
-        "frame_2": "2. 修改时间 (主要)",
-        "btn_set_now": "设为当前时间",
-        "frame_3": "3. 歌曲间隔",
-        "lbl_interval": "每首歌间隔:",
-        "units": ["秒", "分", "小时", "天"],
-        "frame_4": "4. 创建时间设置 (可选)",
-        "chk_create": "同时也修改“创建时间”？",
-        "rb_sync": "与修改时间同步 (简单)",
-        "rb_custom": "自定义时间 (高级)",
-        "btn_run": "立即混洗！",
-        "status_ready": "就绪...",
-        "status_working": "处理中...",
-        "status_done": "完成！",
-        "msg_folder_err": "未找到文件夹或文件夹为空！",
-        "msg_date_err": "日期格式无效！",
-        "msg_confirm_title": "开始混洗？",
-        "msg_confirm_body": "目标: {}\n开始时间: {}\n\n继续吗？",
-        "msg_success": "成功处理 {} 首歌！",
-        "msg_empty": "未找到音频文件！",
-        "lbl_thn": "年", "lbl_bln": "月", "lbl_tgl": "日", 
-        "lbl_jam": "时", "lbl_mnt": "分", "lbl_dtk": "秒",
-        "menu_lang": "语言 (Language)", "menu_help": "帮助",
-        "help_body": "请使用顶部的“语言”菜单更改界面语言。"
-    },
-    "ru": {
-        "app_title": "ReMixList v2.1",
-        "sub_title": "от Expora",
-        "frame_1": "1. Выберите папку с музыкой",
-        "btn_browse": "Обзор...",
-        "btn_clear": "Очистить",
-        "frame_2": "2. Дата изменения (Основная)",
-        "btn_set_now": "Текущее время",
-        "frame_3": "3. Интервал между треками",
-        "lbl_interval": "Пауза между треками:",
-        "units": ["Сек", "Мин", "Час", "Дни"],
-        "frame_4": "4. Дата создания (Опционально)",
-        "chk_create": "Изменить также 'Дату создания'?",
-        "rb_sync": "Синхронизировать с датой изменения",
-        "rb_custom": "Установить своё время (Дополнительно)",
-        "btn_run": "ПЕРЕМЕШАТЬ!",
-        "status_ready": "Готово...",
-        "status_working": "Обработка...",
-        "status_done": "Готово!",
-        "msg_folder_err": "Папка не найдена или пуста!",
-        "msg_date_err": "Неверный формат даты!",
-        "msg_confirm_title": "Начать?",
-        "msg_confirm_body": "Цель: {}\nВремя начала: {}\n\nПродолжить?",
-        "msg_success": "Успешно обработано {} треков!",
-        "msg_empty": "Аудиофайлы не найдены!",
-        "lbl_thn": "Г", "lbl_bln": "М", "lbl_tgl": "Д", 
-        "lbl_jam": "Ч", "lbl_mnt": "Мин", "lbl_dtk": "Сек",
-        "menu_lang": "Язык (Language)", "menu_help": "Помощь",
-        "help_body": "Используйте меню 'Язык' сверху для смены языка интерфейса."
-    }
+    # Fallbacks
+    "jp": {"app_title": "ReMixList v3.1", "sub_title": "Expora作", "tab_file": "🎵 ファイル", "tab_folder": "📂 フォルダ", "units": ["秒", "分", "時間", "日"], "lbl_thn": "年", "lbl_bln": "月", "lbl_tgl": "日", "lbl_jam": "時", "lbl_mnt": "分", "lbl_dtk": "秒"},
+    "cn": {"app_title": "ReMixList v3.1", "sub_title": "Expora 制作", "tab_file": "🎵 文件", "tab_folder": "📂 文件夹", "units": ["秒", "分", "小时", "天"], "lbl_thn": "年", "lbl_bln": "月", "lbl_tgl": "日", "lbl_jam": "时", "lbl_mnt": "分", "lbl_dtk": "秒"},
+    "ru": {"app_title": "ReMixList v3.1", "sub_title": "от Expora", "tab_file": "🎵 Файлы", "tab_folder": "📂 Папки", "units": ["Сек", "Мин", "Час", "Дни"], "lbl_thn": "Г", "lbl_bln": "М", "lbl_tgl": "Д", "lbl_jam": "Ч", "lbl_mnt": "Мин", "lbl_dtk": "Сек"}
 }
+for lang in ["jp", "cn", "ru"]:
+    for key, val in TRANSLATIONS["en"].items():
+        if key not in TRANSLATIONS[lang]: TRANSLATIONS[lang][key] = val
 
-# --- TRIK KHUSUS WINDOWS ---
+# --- KERNEL ACCESS (FIXED) ---
 def set_file_creation_time(path, timestamp):
     try:
         timestamp = int((timestamp * 10000000) + 116444736000000000)
-        handle = ctypes.windll.kernel32.CreateFileW(path, 256, 0, None, 3, 128, None)
+        flags_and_attributes = 128 | 33554432 # FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS
+        handle = ctypes.windll.kernel32.CreateFileW(path, 256, 0, None, 3, flags_and_attributes, None)
         if handle == -1: return
         create_time = wintypes.FILETIME(timestamp & 0xFFFFFFFF, timestamp >> 32)
         ctypes.windll.kernel32.SetFileTime(handle, ctypes.byref(create_time), None, None)
         ctypes.windll.kernel32.CloseHandle(handle)
     except: pass
 
-# --- APLIKASI UTAMA ---
 class AudioShufflerApp:
     def __init__(self, root):
         self.root = root
-        self.root.geometry("550x730")
+        self.root.geometry("600x900")
         self.root.resizable(False, True)
-        
-        # Default Language
         self.lang_code = "en"
+        self.folder_data = [] 
 
-        # Style Setup
-        style = ttk.Style()
-        style.configure("TLabel", font=("Segoe UI", 9))
-
-        # --- MENU BAR ---
         self.menu_bar = tk.Menu(root)
         root.config(menu=self.menu_bar)
         self.setup_menu()
 
-        # --- UI COMPONENTS ---
-        # JUDUL
         self.lbl_title = tk.Label(root, font=("Segoe UI", 14, "bold"))
         self.lbl_title.pack(pady=(10, 0))
         self.lbl_subtitle = tk.Label(root, font=("Segoe UI", 9))
-        self.lbl_subtitle.pack(pady=(0,10))
+        self.lbl_subtitle.pack(pady=(0, 5))
 
-        # AREA 1
-        self.fr_1 = tk.LabelFrame(root, font=("Segoe UI", 9, "bold"), padx=10, pady=10)
-        self.fr_1.pack(fill="x", padx=15, pady=5)
-        self.path_var = tk.StringVar()
-        tk.Entry(self.fr_1, textvariable=self.path_var, width=45).grid(row=0, column=0, padx=(0, 5))
-        self.btn_browse = tk.Button(self.fr_1, command=self.browse_folder, width=8)
-        self.btn_browse.grid(row=0, column=1, padx=2)
-        self.btn_clear = tk.Button(self.fr_1, command=self.clear_path, bg="#ffcccc", width=6)
-        self.btn_clear.grid(row=0, column=2, padx=2)
+        self.notebook = ttk.Notebook(root)
+        self.notebook.pack(expand=True, fill="both", padx=10, pady=5)
 
-        # AREA 2
-        self.fr_2 = tk.LabelFrame(root, font=("Segoe UI", 9, "bold"), padx=10, pady=10)
-        self.fr_2.pack(fill="x", padx=15, pady=5)
-        self.btn_set_now_mod = tk.Button(self.fr_2, command=lambda: self.set_current_time(self.mod_vars), bg="#f0f0f0", font=("Segoe UI", 8))
-        self.btn_set_now_mod.pack(anchor="e", pady=2)
-        self.mod_entries, self.mod_vars = self.create_date_inputs(self.fr_2)
+        self.tab1 = ttk.Frame(self.notebook)
+        self.notebook.add(self.tab1, text="Shuffle Files")
+        self.setup_tab_shuffle()
 
-        # AREA 3 (UPDATED LOGIC)
-        self.fr_3 = tk.LabelFrame(root, font=("Segoe UI", 9, "bold"), padx=10, pady=10)
-        self.fr_3.pack(fill="x", padx=15, pady=5)
-        self.lbl_interval = tk.Label(self.fr_3)
-        self.lbl_interval.pack(side="left")
-        
-        # Spinbox dengan wrap=True
-        self.interval_val = tk.Spinbox(self.fr_3, from_=1, to=59, width=5, wrap=True)
-        self.interval_val.delete(0, "end"); self.interval_val.insert(0, "1")
-        self.interval_val.pack(side="left", padx=5)
-        
-        self.interval_unit = ttk.Combobox(self.fr_3, state="readonly", width=8)
-        self.interval_unit.pack(side="left")
-        # Bind event ketika user ganti satuan (Detik/Menit/Jam)
-        self.interval_unit.bind("<<ComboboxSelected>>", self.update_interval_limit)
+        self.tab2 = ttk.Frame(self.notebook)
+        self.notebook.add(self.tab2, text="Sort Folders")
+        self.setup_tab_folder()
 
-        # AREA 4
-        self.fr_4 = tk.LabelFrame(root, font=("Segoe UI", 9, "bold"), padx=10, pady=10, fg="blue")
-        self.fr_4.pack(fill="x", padx=15, pady=5)
-        self.use_created = tk.BooleanVar(value=False)
-        self.chk_create = tk.Checkbutton(self.fr_4, variable=self.use_created, command=self.toggle_created_options, font=("Segoe UI", 9, "bold"))
-        self.chk_create.pack(anchor="w")
-        
-        self.created_mode = tk.StringVar(value="sync")
-        self.frame_c_opts = tk.Frame(self.fr_4)
-        self.frame_c_opts.pack(fill="x", padx=20, pady=5)
-        self.rb_sync = tk.Radiobutton(self.frame_c_opts, variable=self.created_mode, value="sync", command=self.toggle_created_inputs)
-        self.rb_sync.pack(anchor="w")
-        self.rb_custom = tk.Radiobutton(self.frame_c_opts, variable=self.created_mode, value="custom", command=self.toggle_created_inputs)
-        self.rb_custom.pack(anchor="w")
-
-        self.frame_c_inputs = tk.Frame(self.frame_c_opts)
-        self.frame_c_inputs.pack(pady=5)
-        self.btn_set_now_cre = tk.Button(self.frame_c_inputs, command=lambda: self.set_current_time(self.cre_vars), bg="#f0f0f0", font=("Segoe UI", 8))
-        self.btn_set_now_cre.pack(anchor="e", pady=2)
-        self.cre_entries, self.cre_vars = self.create_date_inputs(self.frame_c_inputs)
-        
-        self.toggle_created_options()
-
-        # EXECUTE BUTTON
-        self.btn_run = tk.Button(root, command=self.run_shuffle, bg="lightgreen", font=("Segoe UI", 12, "bold"), height=2, width=30)
-        self.btn_run.pack(pady=20)
-        self.status_label = tk.Label(root, fg="blue")
-        self.status_label.pack(pady=(0, 10))
-
-        # Set Initial Language
+        self.status_label = tk.Label(root, fg="blue", font=("Segoe UI", 9))
+        self.status_label.pack(pady=5)
         self.change_language("en")
 
-    # --- SETUP MENU BAR ---
+    # --- SETUP TAB 1 ---
+    def setup_tab_shuffle(self):
+        self.fr1_path = tk.LabelFrame(self.tab1, font=("Segoe UI", 9, "bold"), padx=10, pady=10)
+        self.fr1_path.pack(fill="x", padx=10, pady=5)
+        self.t1_path_var = tk.StringVar()
+        tk.Entry(self.fr1_path, textvariable=self.t1_path_var, width=50).grid(row=0, column=0, padx=5)
+        self.t1_btn_browse = tk.Button(self.fr1_path, command=self.t1_browse, width=8)
+        self.t1_btn_browse.grid(row=0, column=1, padx=2)
+        self.t1_btn_clear = tk.Button(self.fr1_path, command=lambda: self.t1_path_var.set(""), bg="#ffcccc", width=6)
+        self.t1_btn_clear.grid(row=0, column=2, padx=2)
+
+        self.fr1_date = tk.LabelFrame(self.tab1, font=("Segoe UI", 9, "bold"), padx=10, pady=10)
+        self.fr1_date.pack(fill="x", padx=10, pady=5)
+        self.t1_btn_now = tk.Button(self.fr1_date, command=lambda: self.set_current_time(self.t1_mod_vars), bg="#f0f0f0", font=("Segoe UI", 8))
+        self.t1_btn_now.pack(anchor="e", pady=2)
+        self.t1_mod_entries, self.t1_mod_vars = self.create_date_inputs(self.fr1_date)
+
+        self.fr1_int = tk.LabelFrame(self.tab1, font=("Segoe UI", 9, "bold"), padx=10, pady=10)
+        self.fr1_int.pack(fill="x", padx=10, pady=5)
+        self.t1_lbl_int = tk.Label(self.fr1_int)
+        self.t1_lbl_int.pack(side="left")
+        self.t1_int_val = tk.Spinbox(self.fr1_int, from_=1, to=59, width=5, wrap=True)
+        self.t1_int_val.delete(0, "end"); self.t1_int_val.insert(0, "1")
+        self.t1_int_val.pack(side="left", padx=5)
+        self.t1_int_unit = ttk.Combobox(self.fr1_int, state="readonly", width=8)
+        self.t1_int_unit.pack(side="left")
+        self.t1_int_unit.bind("<<ComboboxSelected>>", lambda e: self.update_interval_limit(self.t1_int_unit, self.t1_int_val))
+
+        self.fr1_cre = tk.LabelFrame(self.tab1, font=("Segoe UI", 9, "bold"), padx=10, pady=10, fg="blue")
+        self.fr1_cre.pack(fill="x", padx=10, pady=5)
+        self.t1_use_cre = tk.BooleanVar(value=False)
+        self.t1_chk_cre = tk.Checkbutton(self.fr1_cre, variable=self.t1_use_cre, command=self.t1_toggle_cre, font=("Segoe UI", 9, "bold"))
+        self.t1_chk_cre.pack(anchor="w")
+        self.t1_cre_mode = tk.StringVar(value="sync")
+        self.t1_fr_cre_opts = tk.Frame(self.fr1_cre)
+        self.t1_fr_cre_opts.pack(fill="x", padx=20, pady=5)
+        self.t1_rb_sync = tk.Radiobutton(self.t1_fr_cre_opts, variable=self.t1_cre_mode, value="sync", command=self.t1_toggle_inputs)
+        self.t1_rb_sync.pack(anchor="w")
+        self.t1_rb_custom = tk.Radiobutton(self.t1_fr_cre_opts, variable=self.t1_cre_mode, value="custom", command=self.t1_toggle_inputs)
+        self.t1_rb_custom.pack(anchor="w")
+        self.t1_fr_cre_inp = tk.Frame(self.t1_fr_cre_opts)
+        self.t1_fr_cre_inp.pack(pady=5)
+        self.t1_btn_cre_now = tk.Button(self.t1_fr_cre_inp, command=lambda: self.set_current_time(self.t1_cre_vars), bg="#f0f0f0", font=("Segoe UI", 8))
+        self.t1_btn_cre_now.pack(anchor="e", pady=2)
+        self.t1_cre_entries, self.t1_cre_vars = self.create_date_inputs(self.t1_fr_cre_inp)
+        self.t1_toggle_cre()
+
+        self.t1_btn_run = tk.Button(self.tab1, command=self.run_shuffle_files, bg="lightgreen", font=("Segoe UI", 11, "bold"), height=2)
+        self.t1_btn_run.pack(pady=15, fill="x", padx=50)
+
+    # --- SETUP TAB 2 ---
+    def setup_tab_folder(self):
+        frame_list = tk.Frame(self.tab2)
+        frame_list.pack(fill="both", expand=True, padx=10, pady=5)
+        self.t2_lbl_list = tk.Label(frame_list, font=("Segoe UI", 9, "bold"))
+        self.t2_lbl_list.pack(anchor="w")
+        self.t2_lbl_tip = tk.Label(frame_list, font=("Segoe UI", 8, "italic"), fg="#555")
+        self.t2_lbl_tip.pack(anchor="w", pady=(0,5))
+        list_cont = tk.Frame(frame_list)
+        list_cont.pack(fill="both", expand=True)
+        self.folder_listbox = tk.Listbox(list_cont, height=5, selectmode=tk.EXTENDED, activestyle='dotbox')
+        self.folder_listbox.pack(side="left", fill="both", expand=True)
+        self.folder_listbox.drop_target_register(DND_FILES)
+        self.folder_listbox.dnd_bind('<<Drop>>', self.drop_data)
+        scrolly = tk.Scrollbar(list_cont, command=self.folder_listbox.yview)
+        scrolly.pack(side="right", fill="y")
+        self.folder_listbox.config(yscrollcommand=scrolly.set)
+        btn_fr = tk.Frame(frame_list)
+        btn_fr.pack(fill="x", pady=5)
+        self.t2_btn_add = tk.Button(btn_fr, command=self.t2_add_folder, width=18, bg="#e6f3ff")
+        self.t2_btn_add.pack(side="left", padx=2)
+        self.t2_btn_del = tk.Button(btn_fr, command=self.t2_del_folder, width=8, bg="#ffcccc")
+        self.t2_btn_del.pack(side="left", padx=2)
+        self.t2_btn_clr = tk.Button(btn_fr, command=self.t2_clear_all, width=8)
+        self.t2_btn_clr.pack(side="right", padx=2)
+        self.t2_btn_down = tk.Button(btn_fr, text="▼", command=lambda: self.move_item(1), width=4)
+        self.t2_btn_down.pack(side="right", padx=2)
+        self.t2_btn_up = tk.Button(btn_fr, text="▲", command=lambda: self.move_item(-1), width=4)
+        self.t2_btn_up.pack(side="right", padx=2)
+
+        self.fr2_date = tk.LabelFrame(self.tab2, font=("Segoe UI", 9, "bold"), padx=10, pady=5)
+        self.fr2_date.pack(fill="x", padx=10, pady=5)
+        self.t2_btn_now = tk.Button(self.fr2_date, command=lambda: self.set_current_time(self.t2_mod_vars), bg="#f0f0f0", font=("Segoe UI", 8))
+        self.t2_btn_now.pack(anchor="e")
+        self.t2_mod_entries, self.t2_mod_vars = self.create_date_inputs(self.fr2_date)
+
+        self.fr2_int_folder = tk.LabelFrame(self.tab2, font=("Segoe UI", 9, "bold"), padx=10, pady=5)
+        self.fr2_int_folder.pack(fill="x", padx=10, pady=2)
+        self.t2_lbl_int_folder = tk.Label(self.fr2_int_folder)
+        self.t2_lbl_int_folder.pack(side="left")
+        self.t2_int_val_f = tk.Spinbox(self.fr2_int_folder, from_=1, to=59, width=5, wrap=True)
+        self.t2_int_val_f.delete(0, "end"); self.t2_int_val_f.insert(0, "1")
+        self.t2_int_val_f.pack(side="left", padx=5)
+        self.t2_int_unit_f = ttk.Combobox(self.fr2_int_folder, state="readonly", width=8)
+        self.t2_int_unit_f.pack(side="left")
+        self.t2_int_unit_f.bind("<<ComboboxSelected>>", lambda e: self.update_interval_limit(self.t2_int_unit_f, self.t2_int_val_f))
+
+        self.fr2_int_file = tk.LabelFrame(self.tab2, font=("Segoe UI", 9, "bold"), padx=10, pady=5)
+        self.fr2_int_file.pack(fill="x", padx=10, pady=2)
+        self.t2_lbl_int_file = tk.Label(self.fr2_int_file)
+        self.t2_lbl_int_file.pack(side="left")
+        self.t2_int_val_i = tk.Spinbox(self.fr2_int_file, from_=1, to=59, width=5, wrap=True)
+        self.t2_int_val_i.delete(0, "end"); self.t2_int_val_i.insert(0, "1")
+        self.t2_int_val_i.pack(side="left", padx=5)
+        self.t2_int_unit_i = ttk.Combobox(self.fr2_int_file, state="readonly", width=8)
+        self.t2_int_unit_i.pack(side="left")
+        self.t2_int_unit_i.bind("<<ComboboxSelected>>", lambda e: self.update_interval_limit(self.t2_int_unit_i, self.t2_int_val_i))
+
+        self.fr2_cre = tk.LabelFrame(self.tab2, font=("Segoe UI", 9, "bold"), padx=10, pady=5, fg="blue")
+        self.fr2_cre.pack(fill="x", padx=10, pady=5)
+        self.t2_use_cre = tk.BooleanVar(value=False)
+        self.t2_chk_cre = tk.Checkbutton(self.fr2_cre, variable=self.t2_use_cre, command=self.t2_toggle_cre, font=("Segoe UI", 9, "bold"))
+        self.t2_chk_cre.pack(anchor="w")
+        self.t2_cre_mode = tk.StringVar(value="sync")
+        self.t2_fr_cre_opts = tk.Frame(self.fr2_cre)
+        self.t2_fr_cre_opts.pack(fill="x", padx=20, pady=2)
+        self.t2_rb_sync = tk.Radiobutton(self.t2_fr_cre_opts, variable=self.t2_cre_mode, value="sync", command=self.t2_toggle_inputs)
+        self.t2_rb_sync.pack(anchor="w")
+        self.t2_rb_custom = tk.Radiobutton(self.t2_fr_cre_opts, variable=self.t2_cre_mode, value="custom", command=self.t2_toggle_inputs)
+        self.t2_rb_custom.pack(anchor="w")
+        self.t2_fr_cre_inp = tk.Frame(self.t2_fr_cre_opts)
+        self.t2_fr_cre_inp.pack(pady=2)
+        self.t2_btn_cre_now = tk.Button(self.t2_fr_cre_inp, command=lambda: self.set_current_time(self.t2_cre_vars), bg="#f0f0f0", font=("Segoe UI", 8))
+        self.t2_btn_cre_now.pack(anchor="e", pady=2)
+        self.t2_cre_entries, self.t2_cre_vars = self.create_date_inputs(self.t2_fr_cre_inp)
+        self.t2_toggle_cre()
+
+        self.fr2_opts = tk.LabelFrame(self.tab2, font=("Segoe UI", 9, "bold"), padx=10, pady=5, fg="green")
+        self.fr2_opts.pack(fill="x", padx=10, pady=5)
+        self.t2_sync_var = tk.BooleanVar(value=True)
+        self.t2_chk_sync = tk.Checkbutton(self.fr2_opts, variable=self.t2_sync_var, font=("Segoe UI", 9, "bold"))
+        self.t2_chk_sync.pack(anchor="w")
+        self.t2_lbl_sync_hint = tk.Label(self.fr2_opts, font=("Segoe UI", 8, "italic"), fg="gray")
+        self.t2_lbl_sync_hint.pack(anchor="w", padx=20)
+
+        self.t2_btn_run = tk.Button(self.tab2, command=self.run_sort_folders, bg="lightblue", font=("Segoe UI", 11, "bold"), height=2)
+        self.t2_btn_run.pack(pady=10, fill="x", padx=50)
+
+    # --- LOGIC UTILS ---
+    def drop_data(self, event):
+        raw_data = event.data
+        paths = re.findall(r'\{.*?\}|\S+', raw_data)
+        for p in paths:
+            clean_path = p.strip("{}")
+            if os.path.isdir(clean_path):
+                if clean_path not in self.folder_data:
+                    self.folder_data.append(clean_path)
+        self.refresh_listbox()
+
+    def t2_add_folder(self):
+        parent_folder = filedialog.askdirectory() 
+        if parent_folder:
+            try:
+                subfolders = [os.path.join(parent_folder, d) for d in os.listdir(parent_folder) if os.path.isdir(os.path.join(parent_folder, d))]
+                if subfolders:
+                    t = TRANSLATIONS[self.lang_code]
+                    msg = t["msg_smart_body"].format(len(subfolders), os.path.basename(parent_folder))
+                    choice = messagebox.askyesno(t["msg_smart_title"], msg)
+                    if choice:
+                        for sub in subfolders:
+                            if sub not in self.folder_data: self.folder_data.append(sub)
+                    else:
+                        if parent_folder not in self.folder_data: self.folder_data.append(parent_folder)
+                else:
+                    if parent_folder not in self.folder_data: self.folder_data.append(parent_folder)
+                self.refresh_listbox()
+            except Exception as e:
+                messagebox.showerror("Error", str(e))
+
+    def t2_del_folder(self):
+        sels = self.folder_listbox.curselection()
+        if not sels: return
+        for i in reversed(sels):
+            del self.folder_data[i]
+        self.refresh_listbox()
+
+    def t2_clear_all(self):
+        self.folder_data.clear()
+        self.refresh_listbox()
+
+    def move_item(self, direction):
+        sels = self.folder_listbox.curselection()
+        if not sels: return
+        i = sels[0]
+        if direction == -1 and i > 0:
+            self.folder_data[i], self.folder_data[i-1] = self.folder_data[i-1], self.folder_data[i]
+            self.refresh_listbox()
+            self.folder_listbox.selection_set(i-1)
+        elif direction == 1 and i < len(self.folder_data) - 1:
+            self.folder_data[i], self.folder_data[i+1] = self.folder_data[i+1], self.folder_data[i]
+            self.refresh_listbox()
+            self.folder_listbox.selection_set(i+1)
+
+    def refresh_listbox(self):
+        self.folder_listbox.delete(0, "end")
+        for i, folder in enumerate(self.folder_data):
+            display_text = f"[{i+1}] {folder}"
+            self.folder_listbox.insert("end", display_text)
+
+    # --- SHARED LOGIC ---
     def setup_menu(self):
         self.lang_menu = tk.Menu(self.menu_bar, tearoff=0)
         self.menu_bar.add_cascade(label="Language", menu=self.lang_menu)
-        
         self.lang_var = tk.StringVar(value="en")
-        languages = [
-            ("English", "en"),
-            ("Bahasa Indonesia", "id"),
-            ("日本語 (Japanese)", "jp"),
-            ("简体中文 (Chinese)", "cn"),
-            ("Русский (Russian)", "ru")
-        ]
-        for text, code in languages:
-            self.lang_menu.add_radiobutton(label=text, variable=self.lang_var, value=code, command=self.on_lang_change)
-
+        for txt, code in [("English", "en"), ("Bahasa Indonesia", "id"), ("Japanese", "jp"), ("Chinese", "cn"), ("Russian", "ru")]:
+            self.lang_menu.add_radiobutton(label=txt, variable=self.lang_var, value=code, command=self.on_lang_change)
         self.help_menu = tk.Menu(self.menu_bar, tearoff=0)
         self.menu_bar.add_cascade(label="Help", menu=self.help_menu)
-        self.help_menu.add_command(label="Info", command=self.show_help)
+        self.help_menu.add_command(label="Info", command=lambda: messagebox.showinfo("Info", TRANSLATIONS[self.lang_code]["help_body"]))
 
     def on_lang_change(self):
         self.change_language(self.lang_var.get())
@@ -290,238 +381,283 @@ class AudioShufflerApp:
     def change_language(self, code):
         self.lang_code = code
         t = TRANSLATIONS[code]
-
         self.root.title(t["app_title"])
         self.lbl_title.config(text=t["app_title"])
         self.lbl_subtitle.config(text=t["sub_title"])
+        self.notebook.tab(0, text=t["tab_file"])
+        self.notebook.tab(1, text=t["tab_folder"])
 
-        self.fr_1.config(text=t["frame_1"])
-        self.fr_2.config(text=t["frame_2"])
-        self.fr_3.config(text=t["frame_3"])
-        self.fr_4.config(text=t["frame_4"])
+        self.fr1_path.config(text=t["frame_1"])
+        self.fr1_date.config(text=t["frame_2"])
+        self.fr1_int.config(text=t["frame_3"])
+        self.fr1_cre.config(text=t["frame_4"])
+        self.t1_btn_browse.config(text=t["btn_browse"])
+        self.t1_btn_clear.config(text=t["btn_clear"])
+        self.t1_btn_now.config(text=t["btn_set_now"])
+        self.t1_btn_cre_now.config(text=t["btn_set_now"])
+        self.t1_lbl_int.config(text=t["lbl_interval"])
+        self.t1_chk_cre.config(text=t["chk_create"])
+        self.t1_rb_sync.config(text=t["rb_sync"])
+        self.t1_rb_custom.config(text=t["rb_custom"])
+        self.t1_btn_run.config(text=t["btn_run_file"])
 
-        self.btn_browse.config(text=t["btn_browse"])
-        self.btn_clear.config(text=t["btn_clear"])
-        self.btn_set_now_mod.config(text=t["btn_set_now"])
-        self.btn_set_now_cre.config(text=t["btn_set_now"])
-        self.lbl_interval.config(text=t["lbl_interval"])
-        self.chk_create.config(text=t["chk_create"])
-        self.rb_sync.config(text=t["rb_sync"])
-        self.rb_custom.config(text=t["rb_custom"])
-        self.btn_run.config(text=t["btn_run"])
+        self.t2_lbl_list.config(text=t["lbl_folder_list"])
+        self.t2_lbl_tip.config(text=t["lbl_tip"])
+        self.t2_btn_add.config(text=t["btn_add_folder"])
+        self.t2_btn_del.config(text=t["btn_remove"])
+        self.t2_btn_clr.config(text=t["btn_clear_list"])
+        self.t2_btn_up.config(text=t["btn_up"])
+        self.t2_btn_down.config(text=t["btn_down"])
+        self.fr2_date.config(text=t["frame_2"])
+        self.t2_btn_now.config(text=t["btn_set_now"])
+        self.fr2_int_folder.config(text=t["frame_int_folder"])
+        self.t2_lbl_int_folder.config(text=t["lbl_int_folder"])
+        self.fr2_int_file.config(text=t["frame_int_file"])
+        self.t2_lbl_int_file.config(text=t["lbl_int_file"])
+        
+        # Tab 2 Created
+        self.fr2_cre.config(text=t["frame_4_folder"])
+        self.t2_chk_cre.config(text=t["chk_create"])
+        self.t2_rb_sync.config(text=t["rb_sync"])
+        self.t2_rb_custom.config(text=t["rb_custom"])
+        self.t2_btn_cre_now.config(text=t["btn_set_now"])
+
+        self.fr2_opts.config(text=t["frame_opts"])
+        self.t2_chk_sync.config(text=t["chk_sync_content"])
+        self.t2_lbl_sync_hint.config(text=t["lbl_sync_hint"])
+        
+        self.t2_btn_run.config(text=t["btn_run_folder"])
+
         self.status_label.config(text=t["status_ready"])
-
-        # Update Interval Units
-        current_idx = self.interval_unit.current()
-        self.interval_unit.config(values=t["units"])
-        if current_idx == -1: current_idx = 1
-        self.interval_unit.current(current_idx)
+        self.update_combobox(self.t1_int_unit, t["units"])
+        self.update_combobox(self.t2_int_unit_f, t["units"])
+        self.update_combobox(self.t2_int_unit_i, t["units"])
         
-        # PENTING: Update Limit Interval setelah ganti bahasa (biar konsisten)
-        self.update_interval_limit()
-
-        self.menu_bar.entryconfig(1, label=t["menu_lang"])
-        self.menu_bar.entryconfig(2, label=t["menu_help"])
-
         keys = ["lbl_thn", "lbl_bln", "lbl_tgl", "lbl_jam", "lbl_mnt", "lbl_dtk"]
-        self.update_date_labels(self.mod_entries, t, keys)
-        self.update_date_labels(self.cre_entries, t, keys)
-
-    def update_date_labels(self, entries_dict, t, keys):
-        label_map = {
-            "Thn": t["lbl_thn"], "Bln": t["lbl_bln"], "Tgl": t["lbl_tgl"],
-            "Jam": t["lbl_jam"], "Mnt": t["lbl_mnt"], "Dtk": t["lbl_dtk"]
-        }
-        for key, widget in entries_dict.items():
-            parent = widget.master
-            for child in parent.winfo_children():
-                if isinstance(child, tk.Label):
-                    child.config(text=label_map[key])
-    
-    # --- LOGIKA BARU: UPDATE INTERVAL LIMIT ---
-    def update_interval_limit(self, event=None):
-        idx = self.interval_unit.current()
-        # 0=Sec, 1=Min, 2=Hour, 3=Day
+        self.update_date_labels(self.t1_mod_entries, t, keys)
+        self.update_date_labels(self.t1_cre_entries, t, keys)
+        self.update_date_labels(self.t2_mod_entries, t, keys)
+        self.update_date_labels(self.t2_cre_entries, t, keys)
         
-        limit = 999
-        if idx == 0 or idx == 1: # Detik atau Menit
-            limit = 59
-        elif idx == 2: # Jam
-            limit = 23
-        # Kalau Hari (idx 3) tetap 999
-        
-        self.interval_val.config(to=limit)
-        
-        # Cek kalau angka sekarang melebihi limit baru, turunkan
-        try:
-            curr = int(self.interval_val.get())
-            if curr > limit:
-                self.interval_val.delete(0, "end")
-                self.interval_val.insert(0, str(limit))
-        except: pass
+        self.update_interval_limit(self.t1_int_unit, self.t1_int_val)
+        self.update_interval_limit(self.t2_int_unit_f, self.t2_int_val_f)
+        self.update_interval_limit(self.t2_int_unit_i, self.t2_int_val_i)
 
-    def show_help(self):
-        t = TRANSLATIONS[self.lang_code]
-        messagebox.showinfo(t["menu_help"], t["help_body"])
-
-    def clear_path(self):
-        self.path_var.set("")
+    def update_combobox(self, combo, values):
+        idx = combo.current()
+        combo.config(values=values)
+        if idx == -1: combo.current(1)
+        else: combo.current(idx)
 
     def create_date_inputs(self, parent):
         entries = {}
         variables = {}
         labels = ["Thn", "Bln", "Tgl", "Jam", "Mnt", "Dtk"]
         defaults = [2025, 1, 1, 12, 0, 0]
-        limits = {
-            "Thn": (1980, 2099), "Bln": (1, 12), "Tgl": (1, 31),
-            "Jam": (0, 23), "Mnt": (0, 59), "Dtk": (0, 59)
-        }
-        
+        limits = {"Thn": (1980, 2099), "Bln": (1, 12), "Tgl": (1, 31), "Jam": (0, 23), "Mnt": (0, 59), "Dtk": (0, 59)}
         frame = tk.Frame(parent)
         frame.pack()
-
-        def update_days_limit(*args):
+        def update_days(*args):
             try:
-                y = variables["Thn"].get()
-                m = variables["Bln"].get()
-                if m < 1: m = 1
-                if m > 12: m = 12
-                _, max_days = calendar.monthrange(y, m)
-                entries["Tgl"].config(to=max_days)
-                if variables["Tgl"].get() > max_days:
-                    variables["Tgl"].set(max_days)
+                y, m = variables["Thn"].get(), variables["Bln"].get()
+                m = max(1, min(12, m))
+                _, max_d = calendar.monthrange(y, m)
+                entries["Tgl"].config(to=max_d)
+                if variables["Tgl"].get() > max_d: variables["Tgl"].set(max_d)
             except: pass
-
-        for i, (lbl, default) in enumerate(zip(labels, defaults)):
-            f = tk.Frame(frame)
-            f.grid(row=0, column=i, padx=2)
+        for i, (lbl, val) in enumerate(zip(labels, defaults)):
+            f = tk.Frame(frame); f.grid(row=0, column=i, padx=2)
             tk.Label(f, text=lbl, font=("Arial", 7)).pack()
-            
-            min_val, max_val = limits[lbl]
-            var = tk.IntVar(value=default)
-            variables[lbl] = var
-            
-            e = tk.Spinbox(f, from_=min_val, to=max_val, width=4, wrap=True, textvariable=var) 
+            mn, mx = limits[lbl]
+            var = tk.IntVar(value=val); variables[lbl] = var
+            e = tk.Spinbox(f, from_=mn, to=mx, width=4, wrap=True, textvariable=var)
             e.pack()
             entries[lbl] = e
-            
-            if lbl in ["Thn", "Bln"]:
-                var.trace_add("write", update_days_limit)
-
-        update_days_limit()
+            if lbl in ["Thn", "Bln"]: var.trace_add("write", update_days)
+        update_days()
         return entries, variables
 
-    def set_current_time(self, var_dict):
-        now = datetime.now()
-        vals = [now.year, now.month, now.day, now.hour, now.minute, now.second]
-        keys = ["Thn", "Bln", "Tgl", "Jam", "Mnt", "Dtk"]
-        for k, v in zip(keys, vals):
-            var_dict[k].set(v)
+    def update_date_labels(self, entries, t, keys):
+        l_map = {k: t[v] for k, v in zip(["Thn", "Bln", "Tgl", "Jam", "Mnt", "Dtk"], keys)}
+        for k, w in entries.items():
+            for c in w.master.winfo_children():
+                if isinstance(c, tk.Label): c.config(text=l_map[k])
 
-    def toggle_created_options(self):
-        if self.use_created.get():
-            self.rb_sync.config(state="normal")
-            self.rb_custom.config(state="normal")
-            self.toggle_created_inputs()
-        else:
-            self.rb_sync.config(state="disabled")
-            self.rb_custom.config(state="disabled")
-            for w in self.frame_c_inputs.winfo_children():
-                for child in w.winfo_children():
-                    try: child.config(state="disabled")
-                    except: pass
+    def set_current_time(self, vars_dict):
+        n = datetime.now()
+        for k, v in zip(["Thn", "Bln", "Tgl", "Jam", "Mnt", "Dtk"], [n.year, n.month, n.day, n.hour, n.minute, n.second]):
+            vars_dict[k].set(v)
 
-    def toggle_created_inputs(self):
-        state = "normal" if (self.use_created.get() and self.created_mode.get() == "custom") else "disabled"
-        for w in self.frame_c_inputs.winfo_children():
-             if isinstance(w, tk.Button): w.config(state=state)
-             else:
-                 for child in w.winfo_children():
-                     for sub in child.winfo_children(): sub.config(state=state)
+    def get_date(self, vars_dict):
+        try: return datetime(vars_dict["Thn"].get(), vars_dict["Bln"].get(), vars_dict["Tgl"].get(), vars_dict["Jam"].get(), vars_dict["Mnt"].get(), vars_dict["Dtk"].get())
+        except: return None
 
-    def get_date_from_vars(self, var_dict):
+    def update_interval_limit(self, combo, spinbox):
+        idx = combo.current()
+        limit = 23 if idx == 2 else (59 if idx < 2 else 999)
+        spinbox.config(to=limit)
         try:
-            return datetime(
-                var_dict["Thn"].get(), var_dict["Bln"].get(), var_dict["Tgl"].get(),
-                var_dict["Jam"].get(), var_dict["Mnt"].get(), var_dict["Dtk"].get()
-            )
-        except ValueError: return None
+            if int(spinbox.get()) > limit: spinbox.delete(0, "end"); spinbox.insert(0, str(limit))
+        except: pass
 
-    def browse_folder(self):
+    def t1_browse(self):
         f = filedialog.askdirectory()
-        if f: self.path_var.set(f)
+        if f: self.t1_path_var.set(f)
 
-    def run_shuffle(self):
-        t = TRANSLATIONS[self.lang_code]
+    def t1_toggle_cre(self):
+        st = "normal" if self.t1_use_cre.get() else "disabled"
+        self.t1_rb_sync.config(state=st)
+        self.t1_rb_custom.config(state=st)
+        self.t1_toggle_inputs()
+    
+    def t1_toggle_inputs(self):
+        st = "normal" if self.t1_use_cre.get() and self.t1_cre_mode.get() == "custom" else "disabled"
+        for w in self.t1_fr_cre_inp.winfo_children():
+            if isinstance(w, tk.Button): w.config(state=st)
+            else:
+                for c in w.winfo_children():
+                    for s in c.winfo_children(): s.config(state=st)
+
+    def t2_toggle_cre(self):
+        st = "normal" if self.t2_use_cre.get() else "disabled"
+        self.t2_rb_sync.config(state=st)
+        self.t2_rb_custom.config(state=st)
+        self.t2_toggle_inputs()
+    
+    def t2_toggle_inputs(self):
+        st = "normal" if self.t2_use_cre.get() and self.t2_cre_mode.get() == "custom" else "disabled"
+        for w in self.t2_fr_cre_inp.winfo_children():
+            if isinstance(w, tk.Button): w.config(state=st)
+            else:
+                for c in w.winfo_children():
+                    for s in c.winfo_children(): s.config(state=st)
+
+    def get_delta(self, val_w, unit_w):
+        val = int(val_w.get())
+        idx = unit_w.current()
+        if idx == 0: return timedelta(seconds=val)
+        if idx == 1: return timedelta(minutes=val)
+        if idx == 2: return timedelta(hours=val)
+        return timedelta(days=val)
+
+    def run_shuffle_files(self):
+        path = self.t1_path_var.get()
+        start = self.get_date(self.t1_mod_vars)
+        if not path or not os.path.exists(path): return messagebox.showerror("Err", TRANSLATIONS[self.lang_code]["msg_folder_err"])
+        if not start: return messagebox.showerror("Err", TRANSLATIONS[self.lang_code]["msg_date_err"])
+
+        exts = ('.flac', '.mp3', '.wav', '.aiff', '.m4a', '.ogg', '.wma', '.opus', '.dsd', '.dsf')
+        files = []
+        for r, d, f in os.walk(path):
+            for file in f:
+                if file.lower().endswith(exts): files.append(os.path.join(r, file))
         
-        folder = self.path_var.get()
-        if not folder or not os.path.exists(folder):
-            messagebox.showerror("Error", t["msg_folder_err"])
-            return
+        if not files: return messagebox.showwarning("Empty", "No files found!")
+        random.shuffle(files)
 
-        start_mod = self.get_date_from_vars(self.mod_vars)
-        start_cre = self.get_date_from_vars(self.cre_vars)
+        delta = self.get_delta(self.t1_int_val, self.t1_int_unit)
+        curr_m = start
+        curr_c = self.get_date(self.t1_cre_vars) if (self.t1_use_cre.get() and self.t1_cre_mode.get() == "custom") else start
+        if not curr_c: curr_c = start
+
+        self.status_label.config(text=TRANSLATIONS[self.lang_code]["status_working"])
+        self.root.update()
+        count = 0
         
-        if not start_mod:
-            messagebox.showerror("Error", t["msg_date_err"])
-            return
+        for f in files:
+            os.utime(f, (curr_m.timestamp(), curr_m.timestamp()))
+            if self.t1_use_cre.get():
+                target = curr_m if self.t1_cre_mode.get() == "sync" else curr_c
+                set_file_creation_time(f, target.timestamp())
+                if self.t1_cre_mode.get() == "custom": curr_c += delta
+            curr_m += delta
+            count += 1
         
-        if self.use_created.get() and self.created_mode.get() == "custom" and not start_cre:
-             messagebox.showerror("Error", t["msg_date_err"])
-             return
+        self.status_label.config(text=TRANSLATIONS[self.lang_code]["status_done"])
+        messagebox.showinfo("Success", TRANSLATIONS[self.lang_code]["msg_success"].format(count))
 
-        msg = t["msg_confirm_body"].format(folder, start_mod)
-        if not messagebox.askyesno(t["msg_confirm_title"], msg): return
+    # --- REVISED LOGIC: SYNCHRONIZED SMART INTERVAL ---
+    def run_sort_folders(self):
+        folders = self.folder_data
+        start_mod = self.get_date(self.t2_mod_vars)
+        if not folders: return messagebox.showerror("Err", TRANSLATIONS[self.lang_code]["msg_folder_err"])
+        if not start_mod: return messagebox.showerror("Err", TRANSLATIONS[self.lang_code]["msg_date_err"])
 
-        try:
-            exts = ('.flac', '.mp3', '.wav', '.aiff', '.m4a', '.ogg', '.wma', '.opus', '.dsd', '.dsf')
-            files = []
-            for r, d, f in os.walk(folder):
-                for file in f:
-                    if file.lower().endswith(exts):
-                        files.append(os.path.join(r, file))
+        use_cre = self.t2_use_cre.get()
+        cre_mode = self.t2_cre_mode.get()
+        start_cre = self.get_date(self.t2_cre_vars) if (use_cre and cre_mode == "custom") else start_mod
+        if not start_cre: start_cre = start_mod
+
+        delta_folder = self.get_delta(self.t2_int_val_f, self.t2_int_unit_f)
+        delta_file = self.get_delta(self.t2_int_val_i, self.t2_int_unit_i)
+        
+        sync_content = self.t2_sync_var.get()
+        
+        curr_folder_mod = start_mod
+        curr_folder_cre = start_cre
+        
+        self.status_label.config(text=TRANSLATIONS[self.lang_code]["status_working"])
+        self.root.update()
+        count_folders = 0
+        count_files = 0
+        exts = ('.flac', '.mp3', '.wav', '.aiff', '.m4a', '.ogg', '.wma', '.opus', '.dsd', '.dsf')
+
+        for folder in folders:
+            # 1. Update Folder Time
+            ts_folder_mod = curr_folder_mod.timestamp()
+            ts_folder_cre = curr_folder_cre.timestamp() if use_cre else ts_folder_mod
             
-            if not files: 
-                messagebox.showwarning("Empty", t["msg_empty"])
-                return
-
-            random.shuffle(files)
+            try:
+                os.utime(folder, (ts_folder_mod, ts_folder_mod))
+                if use_cre: set_file_creation_time(folder, ts_folder_cre)
+                count_folders += 1
+            except: pass
             
-            val = int(self.interval_val.get())
-            unit_idx = self.interval_unit.current() 
+            # 2. Sync Content
+            file_duration_total = timedelta(0)
+            if sync_content:
+                curr_file_mod = curr_folder_mod
+                curr_file_cre = curr_folder_cre if use_cre else curr_file_mod
+                
+                for root, dirs, files in os.walk(folder):
+                    for file in files:
+                        if file.lower().endswith(exts):
+                            fpath = os.path.join(root, file)
+                            try:
+                                ts_f_mod = curr_file_mod.timestamp()
+                                os.utime(fpath, (ts_f_mod, ts_f_mod))
+                                
+                                ts_f_cre = curr_file_cre.timestamp() if use_cre else ts_f_mod
+                                set_file_creation_time(fpath, ts_f_cre) 
+                                
+                                curr_file_mod += delta_file
+                                if use_cre: curr_file_cre += delta_file
+                                count_files += 1
+                            except: pass
+                
+                if count_files > 0:
+                    file_duration_total = curr_file_mod - curr_folder_mod
+
+            # 3. Next Folder Time (Synchronized Smart Jump)
+            target_next_mod = curr_folder_mod + delta_folder
+            last_file_end_time = curr_folder_mod + file_duration_total
             
-            delta = timedelta(seconds=0)
-            if unit_idx == 0: delta = timedelta(seconds=val)    # Seconds
-            elif unit_idx == 1: delta = timedelta(minutes=val)  # Minutes
-            elif unit_idx == 2: delta = timedelta(hours=val)    # Hours
-            elif unit_idx == 3: delta = timedelta(days=val)     # Days
+            while target_next_mod < last_file_end_time:
+                target_next_mod += delta_folder 
+            
+            # Calculate actual jump duration
+            actual_jump = target_next_mod - curr_folder_mod
+            
+            # Apply jump to both timelines
+            curr_folder_mod = target_next_mod
+            if use_cre:
+                curr_folder_cre += actual_jump # Created date now jumps the exact same amount!
 
-            curr_mod = start_mod
-            curr_cre = start_cre if start_cre else start_mod
-
-            count = 0
-            self.status_label.config(text=t["status_working"])
-            self.root.update()
-
-            for fpath in files:
-                ts_mod = curr_mod.timestamp()
-                os.utime(fpath, (ts_mod, ts_mod))
-
-                if self.use_created.get():
-                    target_cre = curr_mod if self.created_mode.get() == "sync" else curr_cre
-                    set_file_creation_time(fpath, target_cre.timestamp())
-                    if self.created_mode.get() == "custom": curr_cre += delta
-
-                curr_mod += delta
-                count += 1
-
-            self.status_label.config(text=t["status_done"])
-            messagebox.showinfo("Success", t["msg_success"].format(count))
-
-        except Exception as e:
-            messagebox.showerror("Error", str(e))
+        self.status_label.config(text=TRANSLATIONS[self.lang_code]["status_done"])
+        msg = f"Processed {count_folders} folders and {count_files} files."
+        messagebox.showinfo("Success", msg)
 
 if __name__ == "__main__":
-    root = tk.Tk()
+    root = TkinterDnD.Tk()
     app = AudioShufflerApp(root)
     root.mainloop()
