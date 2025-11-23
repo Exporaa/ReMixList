@@ -27,7 +27,7 @@ Aplikasi ini memanipulasi atribut waktu (*timestamp*) pada file audio secara oto
 5. Auto-Correct: Kalau lu lagi isi angka "90", terus lu ganti satuannya ke "Menit", angkanya otomatis turun ke "59" biar gak error.
 
 ## ReMixList v2.1
-Fitur baru ReMixLIst v3.1 - Folder Master Edition
+Fitur baru ReMixLIst v2.1 - Folder Master Edition
 1. Tab System: Memecah aplikasi menjadi 2 mode: Shuffle Files (Acak File) dan Sort Folders (Urutkan Folder).
 2. Folder Sorting: Fitur untuk menyusun urutan folder secara manual (Naik/Turun).
 3. Sync Content: Opsi untuk menyamakan waktu file di dalam folder dengan waktu foldernya.
@@ -39,7 +39,8 @@ Fitur baru ReMixLIst v3.1 - Folder Master Edition
 9. Auto-Hop: Mencegah tabrakan waktu. Jika durasi total lagu dalam satu folder melebihi interval folder, waktu untuk folder berikutnya otomatis "loncat" ke slot waktu kosong selanjutnya.
 10. Smart Sync: Menyempurnakan logika Date Created. Jika Date Modified "loncat" karena fitur Smart Interval, maka Date Created juga ikut loncat dengan durasi yang sama persis. Menjaga konsistensi timeline folder.
 
-<img width="600" height="1040" alt="image" src="https://github.com/user-attachments/assets/9ddd715a-fc4c-4d42-8106-d06a58d3e3fb" />
+<img width="602" height="951" alt="image" src="https://github.com/user-attachments/assets/558ea593-d894-47c2-9c88-f9329de66155" />
+
 
     
 **Cara pakai: Tinggal download yang (ReMixList.Exe) yang tertera, dan langsung pakai**
