@@ -14,9 +14,10 @@ Aplikasi ini memanipulasi atribut waktu (*timestamp*) pada file audio secara oto
 * **Custom Interval:** Mengatur jarak waktu antar lagu (Detik, Menit, Jam, Hari).
 * **Advanced Timestamp:** Mampu mengubah *Date Modified* dan *Date Created* (via Windows Kernel Access).
   
-<img width="690" height="977" alt="image" src="https://github.com/user-attachments/assets/6f426acf-4a94-4a6c-8f05-a65225852489" />
+<img width="690" height="915" alt="image" src="https://github.com/user-attachments/assets/4dab4881-2ffc-4e0c-8551-f7fe9f21739c" />
 
-## ReMixList v2.1.
+
+## ReMixList v1.1.
 
 **Perubahan Logic:**
 1. Interval Dinamis: Batas angka di kotak interval akan berubah otomatis tergantung satuan yang dipilih.
@@ -25,7 +26,7 @@ Aplikasi ini memanipulasi atribut waktu (*timestamp*) pada file audio secara oto
 4. Pilih Hari -> Bebas (sampai 999).
 5. Auto-Correct: Kalau lu lagi isi angka "90", terus lu ganti satuannya ke "Menit", angkanya otomatis turun ke "59" biar gak error.
 
-## ReMixList v3.1
+## ReMixList v2.1
 Fitur baru ReMixLIst v3.1 - Folder Master Edition
 1. Tab System: Memecah aplikasi menjadi 2 mode: Shuffle Files (Acak File) dan Sort Folders (Urutkan Folder).
 2. Folder Sorting: Fitur untuk menyusun urutan folder secara manual (Naik/Turun).
