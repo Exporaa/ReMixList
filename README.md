@@ -40,7 +40,15 @@ Fitur baru ReMixLIst v2.1 - Folder Master Edition
 10. Smart Sync: Menyempurnakan logika Date Created. Jika Date Modified "loncat" karena fitur Smart Interval, maka Date Created juga ikut loncat dengan durasi yang sama persis. Menjaga konsistensi timeline folder.
 
 <img width="602" height="951" alt="image" src="https://github.com/user-attachments/assets/558ea593-d894-47c2-9c88-f9329de66155" />
+## ReMixList v3.1
+Fitur baru ReMixList v3.1 - Sort Files Manual
 
+1. Tab 3: Fitur baru untuk menyusun custom playlist (urutkan file spesifik secara manual).
+2. Quick Tools: Menambahkan tombol bantuan cepat: Reverse Order, Sort A-Z, Sort Oldest/Newest (hanya untuk manual sortir).
+3. Auto-DPI Scaling: Aplikasi otomatis menyesuaikan ukuran (tidak kepotong) di layar laptop modern dengan skala 125% - 150%.
+
+
+<img width="641" height="982" alt="image" src="https://github.com/user-attachments/assets/704d165b-8b33-4692-a71b-ea04971fd072" />
 
     
 **Cara pakai: Tinggal download yang (ReMixList.Exe) yang tertera, dan langsung pakai**
