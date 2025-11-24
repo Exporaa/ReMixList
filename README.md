@@ -40,6 +40,9 @@ Fitur baru ReMixLIst v2.1 - Folder Master Edition
 10. Smart Sync: Menyempurnakan logika Date Created. Jika Date Modified "loncat" karena fitur Smart Interval, maka Date Created juga ikut loncat dengan durasi yang sama persis. Menjaga konsistensi timeline folder.
 
 <img width="602" height="951" alt="image" src="https://github.com/user-attachments/assets/558ea593-d894-47c2-9c88-f9329de66155" />
+
+
+
 ## ReMixList v3.1
 Fitur baru ReMixList v3.1 - Sort Files Manual
 
