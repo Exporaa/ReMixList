@@ -19,7 +19,6 @@ except ImportError:
 
 # --- 1. HIGH DPI AWARENESS FIX (AGAR TAMPILAN SESUAI SKALA WINDOWS) ---
 try:
-    # Memaksa Windows menggunakan scaling asli (High DPI)
     ctypes.windll.shcore.SetProcessDpiAwareness(1)
 except Exception:
     try:
@@ -27,14 +26,15 @@ except Exception:
     except Exception:
         pass
 
-# --- KAMUS BAHASA (DICTIONARY) v3.1 ---
+# --- KAMUS BAHASA (DICTIONARY) v4.4 ---
 TRANSLATIONS = {
     "en": {
-        "app_title": "ReMixList v3.1",
+        "app_title": "ReMixList v4.4",
         "sub_title": "by Expora",
         "tab_file": "🎵 Shuffle Files",
         "tab_folder": "📂 Sort Folders",
         "tab_sort_file": "🎼 Sort Files (Manual)",
+        "tab_number": "🔢 Number Folders",
         "frame_1": "1. Select Music Folder",
         "btn_browse": "Browse...",
         "btn_clear": "Clear",
@@ -66,10 +66,8 @@ TRANSLATIONS = {
         "frame_int_file": "3b. Interval Between FILES (Inside)",
         "lbl_int_file": "Gap per File:",
         "frame_4_folder": "4. Folder 'Date Created' (Optional)",
-        "frame_opts": "5. Content Options",
         "chk_sync_content": "Process files inside?",
         "lbl_sync_hint": "(Files will match the Folder's new timestamps)",
-        "chk_folder_cre": "Change Folder 'Date Created'?",
         "btn_run_folder": "PROCESS FOLDERS!",
         "status_ready": "Ready...",
         "status_working": "Working...",
@@ -81,14 +79,15 @@ TRANSLATIONS = {
         "msg_smart_body": "Found {} sub-folders in '{}'. Add them individually?",
         "lbl_thn": "Yr", "lbl_bln": "Mo", "lbl_tgl": "Day", "lbl_jam": "Hr", "lbl_mnt": "Min", "lbl_dtk": "Sec",
         "menu_lang": "Language", "menu_help": "Help", 
-        "help_body": "Tab 1: Randomize files.\nTab 2 & 3: Drag items to reorder. Use buttons for precise movement."
+        "help_body": "Tab 1: Randomize files.\nTab 2 & 3: Drag items to reorder. Use buttons for precise movement.\nTab 4: Auto-number folders + auto-rounding to next hour if >60 files.",
     },
     "id": {
-        "app_title": "ReMixList v3.1",
+        "app_title": "ReMixList v4.4",
         "sub_title": "oleh Expora",
         "tab_file": "🎵 Acak File",
         "tab_folder": "📂 Urutkan Folder",
         "tab_sort_file": "🎼 Urutkan File (Manual)",
+        "tab_number": "🔢 Beri Nomor Folder",
         "frame_1": "1. Pilih Folder Lagu",
         "btn_browse": "Cari...",
         "btn_clear": "Hapus",
@@ -120,10 +119,8 @@ TRANSLATIONS = {
         "frame_int_file": "3b. Interval Antar FILE (Isi Folder)",
         "lbl_int_file": "Jeda Lagu 1 ke 2:",
         "frame_4_folder": "4. 'Date Created' Folder (Opsional)",
-        "frame_opts": "5. Opsi Isi Folder",
         "chk_sync_content": "Proses file di dalamnya?",
         "lbl_sync_hint": "(File akan mengikuti waktu baru Folder)",
-        "chk_folder_cre": "Ubah 'Date Created' Folder?",
         "btn_run_folder": "PROSES FOLDER!",
         "status_ready": "Siap...",
         "status_working": "Sedang bekerja...",
@@ -135,16 +132,17 @@ TRANSLATIONS = {
         "msg_smart_body": "Ditemukan {} sub-folder di '{}'. Masukkan satu per satu?",
         "lbl_thn": "Thn", "lbl_bln": "Bln", "lbl_tgl": "Tgl", "lbl_jam": "Jam", "lbl_mnt": "Mnt", "lbl_dtk": "Dtk",
         "menu_lang": "Bahasa", "menu_help": "Bantuan",
-        "help_body": "Tab 1: Acak file otomatis.\nTab 2 & 3: Geser item pakai Mouse atau tombol Naik/Turun."
+        "help_body": "Tab 1: Acak file otomatis.\nTab 2 & 3: Geser item pakai Mouse atau tombol Naik/Turun.\nTab 4: Nomor otomatis + pembulatan ke jam berikutnya jika >60 file.",
     },
     # Fallbacks
-    "jp": {"app_title": "ReMixList v3.1", "sub_title": "Expora作", "tab_file": "🎵 ファイル", "tab_folder": "📂 フォルダ", "tab_sort_file": "🎼 ソート", "units": ["秒", "分", "時間", "日"], "lbl_thn": "年", "lbl_bln": "月", "lbl_tgl": "日", "lbl_jam": "時", "lbl_mnt": "分", "lbl_dtk": "秒"},
-    "cn": {"app_title": "ReMixList v3.1", "sub_title": "Expora 制作", "tab_file": "🎵 文件", "tab_folder": "📂 文件夹", "tab_sort_file": "🎼 排序", "units": ["秒", "分", "小时", "天"], "lbl_thn": "年", "lbl_bln": "月", "lbl_tgl": "日", "lbl_jam": "时", "lbl_mnt": "分", "lbl_dtk": "秒"},
-    "ru": {"app_title": "ReMixList v3.1", "sub_title": "от Expora", "tab_file": "🎵 Файлы", "tab_folder": "📂 Папки", "tab_sort_file": "🎼 Сортировка", "units": ["Сек", "Мин", "Час", "Дни"], "lbl_thn": "Г", "lbl_bln": "М", "lbl_tgl": "Д", "lbl_jam": "Ч", "lbl_mnt": "Мин", "lbl_dtk": "Сек"}
+    "jp": {"app_title": "ReMixList v4.4", "sub_title": "Expora作", "tab_file": "🎵 ファイル", "tab_folder": "📂 フォルダ", "tab_sort_file": "🎼 ソート", "tab_number": "🔢 フォルダ番号", "units": ["秒", "分", "時間", "日"], "lbl_thn": "年", "lbl_bln": "月", "lbl_tgl": "日", "lbl_jam": "時", "lbl_mnt": "分", "lbl_dtk": "秒"},
+    "cn": {"app_title": "ReMixList v4.4", "sub_title": "Expora 制作", "tab_file": "🎵 文件", "tab_folder": "📂 文件夹", "tab_sort_file": "🎼 排序", "tab_number": "🔢 文件夹编号", "units": ["秒", "分", "小时", "天"], "lbl_thn": "年", "lbl_bln": "月", "lbl_tgl": "日", "lbl_jam": "时", "lbl_mnt": "分", "lbl_dtk": "秒"},
+    "ru": {"app_title": "ReMixList v4.4", "sub_title": "от Expora", "tab_file": "🎵 Файлы", "tab_folder": "📂 Папки", "tab_sort_file": "🎼 Сортировка", "tab_number": "🔢 Нумерация папок", "units": ["Сек", "Мин", "Час", "Дни"], "lbl_thn": "Г", "lbl_bln": "М", "lbl_tgl": "Д", "lbl_jam": "Ч", "lbl_mnt": "Мин", "lbl_dtk": "Сек"}
 }
 for lang in ["jp", "cn", "ru"]:
     for key, val in TRANSLATIONS["en"].items():
-        if key not in TRANSLATIONS[lang]: TRANSLATIONS[lang][key] = val
+        if key not in TRANSLATIONS[lang]:
+            TRANSLATIONS[lang][key] = val
 
 def set_file_creation_time(path, timestamp):
     try:
@@ -161,16 +159,11 @@ class AudioShufflerApp:
     def __init__(self, root):
         self.root = root
         
-        # --- 2. DYNAMIC GEOMETRY (UKURAN DINAMIS) ---
-        # Mengambil ukuran layar user
+        # --- DYNAMIC GEOMETRY ---
         screen_width = root.winfo_screenwidth()
         screen_height = root.winfo_screenheight()
-        
-        # Atur lebar 640, tapi tinggi 85% dari layar user
         app_width = 640
         app_height = int(screen_height * 0.85)
-        
-        # Center window
         x = (screen_width - app_width) // 2
         y = (screen_height - app_height) // 2
         self.root.geometry(f"{app_width}x{app_height}+{x}+{y}")
@@ -179,8 +172,8 @@ class AudioShufflerApp:
         self.lang_code = "en"
         self.folder_data = [] 
         self.file_sort_data = []
+        self.number_folders_data = []
         
-        # Logic Variables
         self.drag_start_index = None
         self.drag_has_moved = False 
 
@@ -188,15 +181,13 @@ class AudioShufflerApp:
         root.config(menu=self.menu_bar)
         self.setup_menu()
 
-        # --- 3. MAIN SCROLLBAR WRAPPER (AGAR TIDAK KEPOTONG) ---
-        # Ini membuat seluruh aplikasi bisa discroll jika layar terlalu kecil
+        # --- MAIN SCROLLBAR WRAPPER ---
         self.main_container = tk.Frame(root)
         self.main_container.pack(fill="both", expand=True)
 
         self.canvas = tk.Canvas(self.main_container)
         self.scrollbar = ttk.Scrollbar(self.main_container, orient="vertical", command=self.canvas.yview)
         
-        # Frame di dalam Canvas (Isi aplikasi ada di sini)
         self.scrollable_frame = tk.Frame(self.canvas)
 
         self.scrollable_frame.bind(
@@ -212,7 +203,6 @@ class AudioShufflerApp:
         self.canvas.pack(side="left", fill="both", expand=True)
         self.scrollbar.pack(side="right", fill="y")
         
-        # Bind Mousewheel ke seluruh aplikasi
         self.root.bind_all("<MouseWheel>", self._on_mousewheel)
 
         # --- ISI WIDGET DIPINDAH KE self.scrollable_frame ---
@@ -236,10 +226,14 @@ class AudioShufflerApp:
         self.notebook.add(self.tab3, text="Sort Files")
         self.setup_tab_sort_file()
 
+        # ===== TAB: NUMBER FOLDERS =====
+        self.tab4 = ttk.Frame(self.notebook)
+        self.notebook.add(self.tab4, text="Number Folders")
+        self.setup_tab_number_folders()
+
         self.status_label = tk.Label(self.scrollable_frame, fg="blue", font=("Segoe UI", 9))
         self.status_label.pack(pady=5, fill="x")
         
-        # Update width canvas saat resize
         self.canvas.bind('<Configure>', self._configure_canvas_width)
         
         self.change_language("en")
@@ -248,15 +242,9 @@ class AudioShufflerApp:
         self.canvas.itemconfig(self.canvas.find_withtag("all")[0], width=event.width)
 
     def _on_mousewheel(self, event):
-        # FIX SCROLL BUG: 
-        # Cek apakah mouse ada di atas Listbox?
         widget_under_mouse = self.root.winfo_containing(self.root.winfo_pointerx(), self.root.winfo_pointery())
-        
-        # Kalau mouse ada di atas Listbox, JANGAN scroll canvas utama (biar Listbox yang scroll sendiri)
         if isinstance(widget_under_mouse, tk.Listbox):
             return 
-            
-        # Kalau mouse di luar Listbox, baru scroll aplikasi utama
         self.canvas.yview_scroll(int(-1*(event.delta/120)), "units")
 
     # =========================================================================
@@ -266,7 +254,6 @@ class AudioShufflerApp:
         listbox.bind('<Button-1>', lambda e: self.on_drag_start(e, listbox))
         listbox.bind('<B1-Motion>', lambda e: self.on_drag_motion(e, listbox, data_list))
         listbox.bind('<ButtonRelease-1>', lambda e: self.on_drag_release(e, listbox, data_list))
-        # HAPUS BINDING YANG MEMATIKAN SCROLL DI SINI
 
     def on_drag_start(self, event, listbox):
         index = listbox.nearest(event.y)
@@ -278,17 +265,17 @@ class AudioShufflerApp:
 
     def on_drag_motion(self, event, listbox, data_list):
         if self.drag_start_index is None: return
-        
         new_index = listbox.nearest(event.y)
         self.drag_has_moved = True 
-        
         height = listbox.winfo_height()
-        if event.y < 20: listbox.yview_scroll(-1, "units"); new_index = listbox.nearest(event.y)
-        elif event.y > height - 20: listbox.yview_scroll(1, "units"); new_index = listbox.nearest(event.y)
-
+        if event.y < 20: 
+            listbox.yview_scroll(-1, "units")
+            new_index = listbox.nearest(event.y)
+        elif event.y > height - 20: 
+            listbox.yview_scroll(1, "units")
+            new_index = listbox.nearest(event.y)
         if new_index < 0: new_index = 0
         if new_index >= len(data_list): new_index = len(data_list) - 1
-
         if new_index != self.drag_start_index:
             item = data_list.pop(self.drag_start_index)
             data_list.insert(new_index, item)
@@ -308,13 +295,11 @@ class AudioShufflerApp:
     # --- GENERIC LIST UTILS ---
     def refresh_generic_list(self, listbox, data_list, keep_scroll=False):
         current_yview = listbox.yview() if keep_scroll else None
-        
         listbox.delete(0, "end")
         for i, item in enumerate(data_list):
             name = os.path.basename(item)
             if not name: name = item
             listbox.insert("end", f"[{i+1}] {name}")
-            
         if keep_scroll and current_yview:
             listbox.yview_moveto(current_yview[0])
 
@@ -326,15 +311,13 @@ class AudioShufflerApp:
         sels = listbox.curselection()
         if not sels: return
         i = int(sels[0])
-        
         new_idx = i + direction
-        
         if 0 <= new_idx < len(data_list):
             data_list[i], data_list[new_idx] = data_list[new_idx], data_list[i]
             self.refresh_generic_list(listbox, data_list, keep_scroll=False)
             listbox.selection_set(new_idx)
             listbox.activate(new_idx) 
-            listbox.see(new_idx)      
+            listbox.see(new_idx)
 
     # =========================================================================
     # SETUP TAB 1: SHUFFLE
@@ -390,7 +373,7 @@ class AudioShufflerApp:
         self.t1_btn_run.pack(pady=15, fill="x", padx=50)
 
     # =========================================================================
-    # SETUP TAB 2: SORT FOLDERS
+    # SETUP TAB 2: SORT FOLDERS (FINAL CLEAN)
     # =========================================================================
     def setup_tab_folder(self):
         frame_list = tk.Frame(self.tab2)
@@ -426,12 +409,14 @@ class AudioShufflerApp:
         self.t2_btn_up = tk.Button(btn_fr, text="▲", command=lambda: self.move_item(self.folder_listbox, self.folder_data, -1), width=4)
         self.t2_btn_up.pack(side="right", padx=2)
 
+        # Start Time
         self.fr2_date = tk.LabelFrame(self.tab2, font=("Segoe UI", 9, "bold"), padx=10, pady=5)
         self.fr2_date.pack(fill="x", padx=10, pady=5)
         self.t2_btn_now = tk.Button(self.fr2_date, command=lambda: self.set_current_time(self.t2_mod_vars), bg="#f0f0f0", font=("Segoe UI", 8))
         self.t2_btn_now.pack(anchor="e")
         self.t2_mod_entries, self.t2_mod_vars = self.create_date_inputs(self.fr2_date)
 
+        # Folder Gap
         self.fr2_int_folder = tk.LabelFrame(self.tab2, font=("Segoe UI", 9, "bold"), padx=10, pady=5)
         self.fr2_int_folder.pack(fill="x", padx=10, pady=2)
         self.t2_lbl_int_folder = tk.Label(self.fr2_int_folder)
@@ -443,6 +428,7 @@ class AudioShufflerApp:
         self.t2_int_unit_f.pack(side="left")
         self.t2_int_unit_f.bind("<<ComboboxSelected>>", lambda e: self.update_interval_limit(self.t2_int_unit_f, self.t2_int_val_f))
 
+        # File Gap
         self.fr2_int_file = tk.LabelFrame(self.tab2, font=("Segoe UI", 9, "bold"), padx=10, pady=5)
         self.fr2_int_file.pack(fill="x", padx=10, pady=2)
         self.t2_lbl_int_file = tk.Label(self.fr2_int_file)
@@ -454,11 +440,16 @@ class AudioShufflerApp:
         self.t2_int_unit_i.pack(side="left")
         self.t2_int_unit_i.bind("<<ComboboxSelected>>", lambda e: self.update_interval_limit(self.t2_int_unit_i, self.t2_int_val_i))
 
+        # --- 4. Folder 'Date Created' (Optional) + Process files inside ---
         self.fr2_cre = tk.LabelFrame(self.tab2, font=("Segoe UI", 9, "bold"), padx=10, pady=5, fg="blue")
         self.fr2_cre.pack(fill="x", padx=10, pady=5)
+
+        # Checkbox "Change 'Date Created' too?"
         self.t2_use_cre = tk.BooleanVar(value=False)
         self.t2_chk_cre = tk.Checkbutton(self.fr2_cre, variable=self.t2_use_cre, command=self.t2_toggle_cre, font=("Segoe UI", 9, "bold"))
         self.t2_chk_cre.pack(anchor="w")
+
+        # Sync / Custom radio
         self.t2_cre_mode = tk.StringVar(value="sync")
         self.t2_fr_cre_opts = tk.Frame(self.fr2_cre)
         self.t2_fr_cre_opts.pack(fill="x", padx=20, pady=2)
@@ -466,6 +457,8 @@ class AudioShufflerApp:
         self.t2_rb_sync.pack(anchor="w")
         self.t2_rb_custom = tk.Radiobutton(self.t2_fr_cre_opts, variable=self.t2_cre_mode, value="custom", command=self.t2_toggle_inputs)
         self.t2_rb_custom.pack(anchor="w")
+
+        # Custom date inputs + "Set to Now" button
         self.t2_fr_cre_inp = tk.Frame(self.t2_fr_cre_opts)
         self.t2_fr_cre_inp.pack(pady=2)
         self.t2_btn_cre_now = tk.Button(self.t2_fr_cre_inp, command=lambda: self.set_current_time(self.t2_cre_vars), bg="#f0f0f0", font=("Segoe UI", 8))
@@ -473,22 +466,19 @@ class AudioShufflerApp:
         self.t2_cre_entries, self.t2_cre_vars = self.create_date_inputs(self.t2_fr_cre_inp)
         self.t2_toggle_cre()
 
-        self.fr2_opts = tk.LabelFrame(self.tab2, font=("Segoe UI", 9, "bold"), padx=10, pady=5, fg="green")
-        self.fr2_opts.pack(fill="x", padx=10, pady=5)
+        # --- Process files inside? (moved from fr2_opts) ---
         self.t2_sync_var = tk.BooleanVar(value=True)
-        self.t2_chk_sync = tk.Checkbutton(self.fr2_opts, variable=self.t2_sync_var, font=("Segoe UI", 9, "bold"))
-        self.t2_chk_sync.pack(anchor="w")
-        self.t2_lbl_sync_hint = tk.Label(self.fr2_opts, font=("Segoe UI", 8, "italic"), fg="gray")
+        self.t2_chk_sync = tk.Checkbutton(self.fr2_cre, variable=self.t2_sync_var, font=("Segoe UI", 9, "bold"))
+        self.t2_chk_sync.pack(anchor="w", pady=(10,0))
+        self.t2_lbl_sync_hint = tk.Label(self.fr2_cre, font=("Segoe UI", 8, "italic"), fg="gray")
         self.t2_lbl_sync_hint.pack(anchor="w", padx=20)
-        self.t2_use_folder_cre = tk.BooleanVar(value=False)
-        self.t2_chk_folder_cre = tk.Checkbutton(self.fr2_opts, variable=self.t2_use_folder_cre, font=("Segoe UI", 9, "bold"))
-        self.t2_chk_folder_cre.pack(anchor="w", pady=(5,0))
 
+        # --- Run Button ---
         self.t2_btn_run = tk.Button(self.tab2, command=self.run_sort_folders, bg="lightblue", font=("Segoe UI", 11, "bold"), height=2)
         self.t2_btn_run.pack(pady=10, fill="x", padx=50)
 
     # =========================================================================
-    # SETUP TAB 3: SORT FILES
+    # SETUP TAB 3: SORT FILES (MANUAL)
     # =========================================================================
     def setup_tab_sort_file(self):
         frame_list = tk.Frame(self.tab3)
@@ -580,17 +570,125 @@ class AudioShufflerApp:
         self.t3_btn_run = tk.Button(self.tab3, command=self.run_sort_files_manual, bg="lightblue", font=("Segoe UI", 11, "bold"), height=2)
         self.t3_btn_run.pack(pady=10, fill="x", padx=50)
 
-    # --- TAB 2 SPECIFIC LOGIC ---
-    def drop_data_folder(self, event):
+    # =========================================================================
+    # SETUP TAB 4: NUMBER FOLDERS (FINAL CLEAN)
+    # =========================================================================
+    def setup_tab_number_folders(self):
+        frame_list = tk.Frame(self.tab4)
+        frame_list.pack(fill="both", expand=True, padx=10, pady=5)
+        self.t4_lbl_list = tk.Label(frame_list, font=("Segoe UI", 9, "bold"))
+        self.t4_lbl_list.pack(anchor="w")
+        self.t4_lbl_tip = tk.Label(frame_list, font=("Segoe UI", 8, "italic"), fg="#555")
+        self.t4_lbl_tip.pack(anchor="w", pady=(0,5))
+        
+        list_cont = tk.Frame(frame_list)
+        list_cont.pack(fill="both", expand=True)
+        
+        self.number_listbox = tk.Listbox(list_cont, height=5, selectmode=tk.SINGLE, activestyle='dotbox', exportselection=False)
+        self.number_listbox.pack(side="left", fill="both", expand=True)
+        self.number_listbox.drop_target_register(DND_FILES)
+        self.number_listbox.dnd_bind('<<Drop>>', self.drop_data_number_folder)
+        self.enable_internal_drag(self.number_listbox, self.number_folders_data)
+
+        scrolly = tk.Scrollbar(list_cont, command=self.number_listbox.yview)
+        scrolly.pack(side="right", fill="y")
+        self.number_listbox.config(yscrollcommand=scrolly.set)
+        
+        btn_fr = tk.Frame(frame_list)
+        btn_fr.pack(fill="x", pady=5)
+        self.t4_btn_add = tk.Button(btn_fr, command=self.t4_add_folder, width=15, bg="#e6f3ff")
+        self.t4_btn_add.pack(side="left", padx=2)
+        self.t4_btn_del = tk.Button(btn_fr, command=self.t4_del_folder, width=8, bg="#ffcccc")
+        self.t4_btn_del.pack(side="left", padx=2)
+        self.t4_btn_clr = tk.Button(btn_fr, command=lambda: self.clear_list(self.number_listbox, self.number_folders_data), width=8)
+        self.t4_btn_clr.pack(side="right", padx=2)
+        self.t4_btn_down = tk.Button(btn_fr, text="▼", command=lambda: self.move_item(self.number_listbox, self.number_folders_data, 1), width=4)
+        self.t4_btn_down.pack(side="right", padx=2)
+        self.t4_btn_up = tk.Button(btn_fr, text="▲", command=lambda: self.move_item(self.number_listbox, self.number_folders_data, -1), width=4)
+        self.t4_btn_up.pack(side="right", padx=2)
+
+        # Start Time
+        self.fr4_date = tk.LabelFrame(self.tab4, font=("Segoe UI", 9, "bold"), padx=10, pady=5)
+        self.fr4_date.pack(fill="x", padx=10, pady=5)
+        self.t4_btn_now = tk.Button(self.fr4_date, command=lambda: self.set_current_time(self.t4_mod_vars), bg="#f0f0f0", font=("Segoe UI", 8))
+        self.t4_btn_now.pack(anchor="e")
+        self.t4_mod_entries, self.t4_mod_vars = self.create_date_inputs(self.fr4_date)
+
+        # Folder Gap
+        self.fr4_int_folder = tk.LabelFrame(self.tab4, font=("Segoe UI", 9, "bold"), padx=10, pady=5)
+        self.fr4_int_folder.pack(fill="x", padx=10, pady=2)
+        self.t4_lbl_int_folder = tk.Label(self.fr4_int_folder)
+        self.t4_lbl_int_folder.pack(side="left")
+        self.t4_int_val_f = tk.Spinbox(self.fr4_int_folder, from_=1, to=59, width=5, wrap=True)
+        self.t4_int_val_f.delete(0, "end"); self.t4_int_val_f.insert(0, "1")
+        self.t4_int_val_f.pack(side="left", padx=5)
+        self.t4_int_unit_f = ttk.Combobox(self.fr4_int_folder, state="readonly", width=8)
+        self.t4_int_unit_f.pack(side="left")
+        self.t4_int_unit_f.bind("<<ComboboxSelected>>", lambda e: self.update_interval_limit(self.t4_int_unit_f, self.t4_int_val_f))
+
+        # File Gap
+        self.fr4_int_file = tk.LabelFrame(self.tab4, font=("Segoe UI", 9, "bold"), padx=10, pady=5)
+        self.fr4_int_file.pack(fill="x", padx=10, pady=2)
+        self.t4_lbl_int_file = tk.Label(self.fr4_int_file)
+        self.t4_lbl_int_file.pack(side="left")
+        self.t4_int_val_i = tk.Spinbox(self.fr4_int_file, from_=1, to=59, width=5, wrap=True)
+        self.t4_int_val_i.delete(0, "end"); self.t4_int_val_i.insert(0, "1")
+        self.t4_int_val_i.pack(side="left", padx=5)
+        self.t4_int_unit_i = ttk.Combobox(self.fr4_int_file, state="readonly", width=8)
+        self.t4_int_unit_i.pack(side="left")
+        self.t4_int_unit_i.bind("<<ComboboxSelected>>", lambda e: self.update_interval_limit(self.t4_int_unit_i, self.t4_int_val_i))
+
+        # --- 4. Folder 'Date Created' (Optional) + Process files inside ---
+        self.fr4_cre = tk.LabelFrame(self.tab4, font=("Segoe UI", 9, "bold"), padx=10, pady=5, fg="blue")
+        self.fr4_cre.pack(fill="x", padx=10, pady=5)
+
+        # Checkbox "Change 'Date Created' too?"
+        self.t4_use_cre = tk.BooleanVar(value=False)
+        self.t4_chk_cre = tk.Checkbutton(self.fr4_cre, variable=self.t4_use_cre, command=self.t4_toggle_cre, font=("Segoe UI", 9, "bold"))
+        self.t4_chk_cre.pack(anchor="w")
+
+        # Sync / Custom radio
+        self.t4_cre_mode = tk.StringVar(value="sync")
+        self.t4_fr_cre_opts = tk.Frame(self.fr4_cre)
+        self.t4_fr_cre_opts.pack(fill="x", padx=20, pady=2)
+        self.t4_rb_sync = tk.Radiobutton(self.t4_fr_cre_opts, variable=self.t4_cre_mode, value="sync", command=self.t4_toggle_inputs)
+        self.t4_rb_sync.pack(anchor="w")
+        self.t4_rb_custom = tk.Radiobutton(self.t4_fr_cre_opts, variable=self.t4_cre_mode, value="custom", command=self.t4_toggle_inputs)
+        self.t4_rb_custom.pack(anchor="w")
+
+        # Custom date inputs + "Set to Now" button
+        self.t4_fr_cre_inp = tk.Frame(self.t4_fr_cre_opts)
+        self.t4_fr_cre_inp.pack(pady=2)
+        self.t4_btn_cre_now = tk.Button(self.t4_fr_cre_inp, command=lambda: self.set_current_time(self.t4_cre_vars), bg="#f0f0f0", font=("Segoe UI", 8))
+        self.t4_btn_cre_now.pack(anchor="e", pady=2)
+        self.t4_cre_entries, self.t4_cre_vars = self.create_date_inputs(self.t4_fr_cre_inp)
+        self.t4_toggle_cre()
+
+        # --- Process files inside? ---
+        self.t4_sync_var = tk.BooleanVar(value=True)
+        self.t4_chk_sync = tk.Checkbutton(self.fr4_cre, variable=self.t4_sync_var, font=("Segoe UI", 9, "bold"))
+        self.t4_chk_sync.pack(anchor="w", pady=(10,0))
+        self.t4_lbl_sync_hint = tk.Label(self.fr4_cre, font=("Segoe UI", 8, "italic"), fg="gray")
+        self.t4_lbl_sync_hint.pack(anchor="w", padx=20)
+
+        # --- Run Button ---
+        self.t4_btn_run = tk.Button(self.tab4, command=self.run_number_folders, bg="lightcoral", font=("Segoe UI", 11, "bold"), height=2)
+        self.t4_btn_run.pack(pady=10, fill="x", padx=50)
+
+    # =========================================================================
+    # TAB 4 SPECIFIC LOGIC
+    # =========================================================================
+    def drop_data_number_folder(self, event):
         raw_data = event.data
         paths = re.findall(r'\{.*?\}|\S+', raw_data)
         for p in paths:
             clean_path = p.strip("{}")
             if os.path.isdir(clean_path):
-                if clean_path not in self.folder_data: self.folder_data.append(clean_path)
-        self.refresh_generic_list(self.folder_listbox, self.folder_data, keep_scroll=False)
+                if clean_path not in self.number_folders_data:
+                    self.number_folders_data.append(clean_path)
+        self.refresh_generic_list(self.number_listbox, self.number_folders_data, keep_scroll=False)
 
-    def t2_add_folder(self):
+    def t4_add_folder(self):
         parent_folder = filedialog.askdirectory() 
         if parent_folder:
             try:
@@ -601,289 +699,49 @@ class AudioShufflerApp:
                     choice = messagebox.askyesno(t["msg_smart_title"], msg)
                     if choice:
                         for sub in subfolders:
-                            if sub not in self.folder_data: self.folder_data.append(sub)
+                            if sub not in self.number_folders_data:
+                                self.number_folders_data.append(sub)
                     else:
-                        if parent_folder not in self.folder_data: self.folder_data.append(parent_folder)
+                        if parent_folder not in self.number_folders_data:
+                            self.number_folders_data.append(parent_folder)
                 else:
-                    if parent_folder not in self.folder_data: self.folder_data.append(parent_folder)
-                self.refresh_generic_list(self.folder_listbox, self.folder_data, keep_scroll=False)
+                    if parent_folder not in self.number_folders_data:
+                        self.number_folders_data.append(parent_folder)
+                self.refresh_generic_list(self.number_listbox, self.number_folders_data, keep_scroll=False)
             except Exception as e:
                 messagebox.showerror("Error", str(e))
 
-    def t2_del_folder(self):
-        sels = self.folder_listbox.curselection()
+    def t4_del_folder(self):
+        sels = self.number_listbox.curselection()
         if not sels: return
         idx_list = [int(i) for i in sels]
         for i in sorted(idx_list, reverse=True):
-            del self.folder_data[i]
-        
-        self.refresh_generic_list(self.folder_listbox, self.folder_data, keep_scroll=False)
-        
-        if len(self.folder_data) > 0 and idx_list:
-            new_sel = min(idx_list[0], len(self.folder_data) - 1)
-            self.folder_listbox.selection_set(new_sel)
-            self.folder_listbox.activate(new_sel)
+            del self.number_folders_data[i]
+        self.refresh_generic_list(self.number_listbox, self.number_folders_data, keep_scroll=False)
+        if len(self.number_folders_data) > 0 and idx_list:
+            new_sel = min(idx_list[0], len(self.number_folders_data) - 1)
+            self.number_listbox.selection_set(new_sel)
+            self.number_listbox.activate(new_sel)
 
-    # --- TAB 3 SPECIFIC LOGIC ---
-    def drop_data_file(self, event):
-        raw_data = event.data
-        paths = re.findall(r'\{.*?\}|\S+', raw_data)
-        exts = ('.flac', '.mp3', '.wav', '.aiff', '.m4a', '.ogg', '.wma', '.opus', '.dsd', '.dsf')
-        for p in paths:
-            clean_path = p.strip("{}")
-            if os.path.isfile(clean_path) and clean_path.lower().endswith(exts):
-                if clean_path not in self.file_sort_data: self.file_sort_data.append(clean_path)
-        self.refresh_generic_list(self.file_listbox, self.file_sort_data, keep_scroll=False)
-
-    def t3_add_files(self):
-        files = filedialog.askopenfilenames(filetypes=[("Audio Files", "*.mp3 *.flac *.wav *.m4a *.ogg *.wma *.opus *.dsd *.dsf")])
-        if files:
-            for f in files:
-                if f not in self.file_sort_data: self.file_sort_data.append(f)
-            self.refresh_generic_list(self.file_listbox, self.file_sort_data, keep_scroll=False)
-
-    def t3_del_file(self):
-        sels = self.file_listbox.curselection()
-        if not sels: return
-        idx_list = [int(i) for i in sels]
-        for i in sorted(idx_list, reverse=True):
-            del self.file_sort_data[i]
-        
-        self.refresh_generic_list(self.file_listbox, self.file_sort_data, keep_scroll=False)
-        
-        if len(self.file_sort_data) > 0 and idx_list:
-            new_sel = min(idx_list[0], len(self.file_sort_data) - 1)
-            self.file_listbox.selection_set(new_sel)
-            self.file_listbox.activate(new_sel)
-
-    # --- NEW SORT TOOLS LOGIC ---
-    def t3_reverse_list(self):
-        self.file_sort_data.reverse()
-        self.refresh_generic_list(self.file_listbox, self.file_sort_data, keep_scroll=False)
-
-    def t3_sort_by_name(self):
-        self.file_sort_data.sort(key=lambda f: os.path.basename(f).lower())
-        self.refresh_generic_list(self.file_listbox, self.file_sort_data, keep_scroll=False)
-
-    def t3_sort_by_date(self, reverse=False):
-        self.file_sort_data.sort(key=lambda f: os.path.getmtime(f), reverse=reverse)
-        self.refresh_generic_list(self.file_listbox, self.file_sort_data, keep_scroll=False)
-
-    def t1_browse(self):
-        f = filedialog.askdirectory()
-        if f: self.t1_path_var.set(f)
-
-    # --- TOGGLE CONTROLS ---
-    def t1_toggle_cre(self):
-        st = "normal" if self.t1_use_cre.get() else "disabled"
-        self.t1_rb_sync.config(state=st)
-        self.t1_rb_custom.config(state=st)
-        self.t1_toggle_inputs()
+    def t4_toggle_cre(self):
+        st = "normal" if self.t4_use_cre.get() else "disabled"
+        self.t4_rb_sync.config(state=st)
+        self.t4_rb_custom.config(state=st)
+        self.t4_toggle_inputs()
     
-    def t1_toggle_inputs(self):
-        st = "normal" if self.t1_use_cre.get() and self.t1_cre_mode.get() == "custom" else "disabled"
-        for w in self.t1_fr_cre_inp.winfo_children():
-            if isinstance(w, tk.Button): w.config(state=st)
+    def t4_toggle_inputs(self):
+        st = "normal" if self.t4_use_cre.get() and self.t4_cre_mode.get() == "custom" else "disabled"
+        for w in self.t4_fr_cre_inp.winfo_children():
+            if isinstance(w, tk.Button):
+                w.config(state=st)
             else:
                 for c in w.winfo_children():
-                    for s in c.winfo_children(): s.config(state=st)
+                    for s in c.winfo_children():
+                        s.config(state=st)
 
-    def t2_toggle_cre(self):
-        st = "normal" if self.t2_use_cre.get() else "disabled"
-        self.t2_rb_sync.config(state=st)
-        self.t2_rb_custom.config(state=st)
-        self.t2_toggle_inputs()
-    
-    def t2_toggle_inputs(self):
-        st = "normal" if self.t2_use_cre.get() and self.t2_cre_mode.get() == "custom" else "disabled"
-        for w in self.t2_fr_cre_inp.winfo_children():
-            if isinstance(w, tk.Button): w.config(state=st)
-            else:
-                for c in w.winfo_children():
-                    for s in c.winfo_children(): s.config(state=st)
-
-    def t3_toggle_cre(self):
-        st = "normal" if self.t3_use_cre.get() else "disabled"
-        self.t3_rb_sync.config(state=st)
-        self.t3_rb_custom.config(state=st)
-        self.t3_toggle_inputs()
-    
-    def t3_toggle_inputs(self):
-        st = "normal" if self.t3_use_cre.get() and self.t3_cre_mode.get() == "custom" else "disabled"
-        for w in self.t3_fr_cre_inp.winfo_children():
-            if isinstance(w, tk.Button): w.config(state=st)
-            else:
-                for c in w.winfo_children():
-                    for s in c.winfo_children(): s.config(state=st)
-
-    # --- SHARED MENU & UI ---
-    def setup_menu(self):
-        self.lang_menu = tk.Menu(self.menu_bar, tearoff=0)
-        self.menu_bar.add_cascade(label="Language", menu=self.lang_menu)
-        self.lang_var = tk.StringVar(value="en")
-        for txt, code in [("English", "en"), ("Bahasa Indonesia", "id"), ("Japanese", "jp"), ("Chinese", "cn"), ("Russian", "ru")]:
-            self.lang_menu.add_radiobutton(label=txt, variable=self.lang_var, value=code, command=self.on_lang_change)
-        self.help_menu = tk.Menu(self.menu_bar, tearoff=0)
-        self.menu_bar.add_cascade(label="Help", menu=self.help_menu)
-        self.help_menu.add_command(label="Info", command=lambda: messagebox.showinfo("Info", TRANSLATIONS[self.lang_code]["help_body"]))
-
-    def on_lang_change(self):
-        self.change_language(self.lang_var.get())
-
-    def change_language(self, code):
-        self.lang_code = code
-        t = TRANSLATIONS[code]
-        self.root.title(t["app_title"])
-        self.lbl_title.config(text=t["app_title"])
-        self.lbl_subtitle.config(text=t["sub_title"])
-        self.notebook.tab(0, text=t["tab_file"])
-        self.notebook.tab(1, text=t["tab_folder"])
-        self.notebook.tab(2, text=t["tab_sort_file"])
-
-        # Tab 1
-        self.fr1_path.config(text=t["frame_1"])
-        self.fr1_date.config(text=t["frame_2"])
-        self.fr1_int.config(text=t["frame_3"])
-        self.fr1_cre.config(text=t["frame_4"])
-        self.t1_btn_browse.config(text=t["btn_browse"])
-        self.t1_btn_clear.config(text=t["btn_clear"])
-        self.t1_btn_now.config(text=t["btn_set_now"])
-        self.t1_lbl_int.config(text=t["lbl_interval"])
-        self.t1_chk_cre.config(text=t["chk_create"])
-        self.t1_rb_sync.config(text=t["rb_sync"])
-        self.t1_rb_custom.config(text=t["rb_custom"])
-        self.t1_btn_run.config(text=t["btn_run_file"])
-
-        # Tab 2
-        self.t2_lbl_list.config(text=t["lbl_list"])
-        self.t2_lbl_tip.config(text=t["lbl_tip"])
-        self.t2_btn_add.config(text=t["btn_add"])
-        self.t2_btn_del.config(text=t["btn_remove"])
-        self.t2_btn_clr.config(text=t["btn_clear_list"])
-        self.t2_btn_up.config(text=t["btn_up"])
-        self.t2_btn_down.config(text=t["btn_down"])
-        self.fr2_date.config(text=t["frame_2"])
-        self.t2_btn_now.config(text=t["btn_set_now"])
-        self.fr2_int_folder.config(text=t["frame_int_folder"])
-        self.t2_lbl_int_folder.config(text=t["lbl_int_folder"])
-        self.fr2_int_file.config(text=t["frame_int_file"])
-        self.t2_lbl_int_file.config(text=t["lbl_int_file"])
-        self.fr2_cre.config(text=t["frame_4_folder"])
-        self.t2_chk_cre.config(text=t["chk_create"])
-        self.t2_rb_sync.config(text=t["rb_sync"])
-        self.t2_rb_custom.config(text=t["rb_custom"])
-        self.t2_btn_cre_now.config(text=t["btn_set_now"])
-        self.fr2_opts.config(text=t["frame_opts"])
-        self.t2_chk_sync.config(text=t["chk_sync_content"])
-        self.t2_lbl_sync_hint.config(text=t["lbl_sync_hint"])
-        self.t2_chk_folder_cre.config(text=t["chk_folder_cre"])
-        self.t2_btn_run.config(text=t["btn_run_folder"])
-
-        # Tab 3
-        self.t3_lbl_list.config(text=t["lbl_list"])
-        self.t3_lbl_tip.config(text=t["lbl_tip"])
-        self.t3_btn_add.config(text=t["btn_add"])
-        self.t3_btn_del.config(text=t["btn_remove"])
-        self.t3_btn_clr.config(text=t["btn_clear_list"])
-        self.t3_btn_up.config(text=t["btn_up"])
-        self.t3_btn_down.config(text=t["btn_down"])
-        
-        self.t3_lbl_tools.config(text=t["lbl_tools"])
-        self.t3_btn_reverse.config(text=t["btn_reverse"])
-        self.t3_btn_sort_name.config(text=t["btn_sort_name"])
-        self.t3_btn_sort_old.config(text=t["btn_sort_date_old"])
-        self.t3_btn_sort_new.config(text=t["btn_sort_date_new"])
-
-        self.fr3_date.config(text=t["frame_2"])
-        self.t3_btn_now.config(text=t["btn_set_now"])
-        self.fr3_int.config(text=t["frame_3"])
-        self.t3_lbl_int.config(text=t["lbl_interval"])
-        self.fr3_cre.config(text=t["frame_4"])
-        self.t3_chk_cre.config(text=t["chk_create"])
-        self.t3_rb_sync.config(text=t["rb_sync"])
-        self.t3_rb_custom.config(text=t["rb_custom"])
-        self.t3_btn_cre_now.config(text=t["btn_set_now"])
-        self.t3_btn_run.config(text=t["btn_run_sort_file"])
-
-        self.status_label.config(text=t["status_ready"])
-        self.update_combobox(self.t1_int_unit, t["units"])
-        self.update_combobox(self.t2_int_unit_f, t["units"])
-        self.update_combobox(self.t2_int_unit_i, t["units"])
-        self.update_combobox(self.t3_int_unit, t["units"])
-        
-        keys = ["lbl_thn", "lbl_bln", "lbl_tgl", "lbl_jam", "lbl_mnt", "lbl_dtk"]
-        self.update_date_labels(self.t1_mod_entries, t, keys)
-        self.update_date_labels(self.t1_cre_entries, t, keys)
-        self.update_date_labels(self.t2_mod_entries, t, keys)
-        self.update_date_labels(self.t2_cre_entries, t, keys)
-        self.update_date_labels(self.t3_mod_entries, t, keys)
-        self.update_date_labels(self.t3_cre_entries, t, keys)
-
-    def update_combobox(self, combo, values):
-        idx = combo.current()
-        combo.config(values=values)
-        if idx == -1: combo.current(1)
-        else: combo.current(idx)
-
-    def create_date_inputs(self, parent):
-        entries = {}
-        variables = {}
-        labels = ["Thn", "Bln", "Tgl", "Jam", "Mnt", "Dtk"]
-        defaults = [2025, 1, 1, 12, 0, 0]
-        limits = {"Thn": (1980, 2099), "Bln": (1, 12), "Tgl": (1, 31), "Jam": (0, 23), "Mnt": (0, 59), "Dtk": (0, 59)}
-        frame = tk.Frame(parent)
-        frame.pack()
-        def update_days(*args):
-            try:
-                y, m = variables["Thn"].get(), variables["Bln"].get()
-                m = max(1, min(12, m))
-                _, max_d = calendar.monthrange(y, m)
-                entries["Tgl"].config(to=max_d)
-                if variables["Tgl"].get() > max_d: variables["Tgl"].set(max_d)
-            except: pass
-        for i, (lbl, val) in enumerate(zip(labels, defaults)):
-            f = tk.Frame(frame); f.grid(row=0, column=i, padx=2)
-            tk.Label(f, text=lbl, font=("Arial", 7)).pack()
-            mn, mx = limits[lbl]
-            var = tk.IntVar(value=val); variables[lbl] = var
-            e = tk.Spinbox(f, from_=mn, to=mx, width=4, wrap=True, textvariable=var)
-            e.pack()
-            entries[lbl] = e
-            if lbl in ["Thn", "Bln"]: var.trace_add("write", update_days)
-        update_days()
-        return entries, variables
-
-    def update_date_labels(self, entries, t, keys):
-        l_map = {k: t[v] for k, v in zip(["Thn", "Bln", "Tgl", "Jam", "Mnt", "Dtk"], keys)}
-        for k, w in entries.items():
-            for c in w.master.winfo_children():
-                if isinstance(c, tk.Label): c.config(text=l_map[k])
-
-    def set_current_time(self, vars_dict):
-        n = datetime.now()
-        for k, v in zip(["Thn", "Bln", "Tgl", "Jam", "Mnt", "Dtk"], [n.year, n.month, n.day, n.hour, n.minute, n.second]):
-            vars_dict[k].set(v)
-
-    def get_date(self, vars_dict):
-        try: return datetime(vars_dict["Thn"].get(), vars_dict["Bln"].get(), vars_dict["Tgl"].get(), vars_dict["Jam"].get(), vars_dict["Mnt"].get(), vars_dict["Dtk"].get())
-        except: return None
-
-    def update_interval_limit(self, combo, spinbox):
-        idx = combo.current()
-        limit = 23 if idx == 2 else (59 if idx < 2 else 999)
-        spinbox.config(to=limit)
-        try:
-            if int(spinbox.get()) > limit: spinbox.delete(0, "end"); spinbox.insert(0, str(limit))
-        except: pass
-
-    def get_delta(self, val_w, unit_w):
-        val = int(val_w.get())
-        idx = unit_w.current()
-        if idx == 0: return timedelta(seconds=val)
-        if idx == 1: return timedelta(minutes=val)
-        if idx == 2: return timedelta(hours=val)
-        return timedelta(days=val)
-
+    # =========================================================================
+    # RUN METHODS
+    # =========================================================================
     def run_shuffle_files(self):
         path = self.t1_path_var.get()
         start = self.get_date(self.t1_mod_vars)
@@ -968,7 +826,7 @@ class AudioShufflerApp:
                                 ts_f_cre = curr_file_cre.timestamp() if use_cre else ts_f_mod
                                 set_file_creation_time(fpath, ts_f_cre) 
                                 curr_file_mod += delta_file
-                                if use_cre: curr_file_cre += delta_file
+                                if use_cre and cre_mode == "custom": curr_file_cre += delta_file
                                 count_files += 1
                             except: pass
                 if count_files > 0:
@@ -987,7 +845,6 @@ class AudioShufflerApp:
         msg = f"Processed {count_folders} folders and {count_files} files."
         messagebox.showinfo("Success", msg)
 
-    # --- RUN TAB 3 (SORT FILES MANUAL) ---
     def run_sort_files_manual(self):
         files = self.file_sort_data
         start = self.get_date(self.t3_mod_vars)
@@ -1017,6 +874,459 @@ class AudioShufflerApp:
         
         self.status_label.config(text=TRANSLATIONS[self.lang_code]["status_done"])
         messagebox.showinfo("Success", TRANSLATIONS[self.lang_code]["msg_success"].format(count))
+
+    # --- RUN NUMBER FOLDERS (ROUNDING ALWAYS ON, THRESHOLD=60) ---
+    def run_number_folders(self):
+        folders = self.number_folders_data.copy()
+        if not folders:
+            return messagebox.showerror("Err", TRANSLATIONS[self.lang_code]["msg_folder_err"])
+        
+        start_mod = self.get_date(self.t4_mod_vars)
+        if not start_mod:
+            return messagebox.showerror("Err", TRANSLATIONS[self.lang_code]["msg_date_err"])
+
+        use_cre = self.t4_use_cre.get()
+        cre_mode = self.t4_cre_mode.get()
+        start_cre = self.get_date(self.t4_cre_vars) if (use_cre and cre_mode == "custom") else start_mod
+        if not start_cre:
+            start_cre = start_mod
+
+        delta_folder = self.get_delta(self.t4_int_val_f, self.t4_int_unit_f)
+        delta_file = self.get_delta(self.t4_int_val_i, self.t4_int_unit_i)
+        
+        sync_content = self.t4_sync_var.get()
+        # Always add number prefix, always apply rounding with threshold 60
+        add_prefix = True
+        round_hour = True
+        threshold = 60
+
+        self.status_label.config(text=TRANSLATIONS[self.lang_code]["status_working"])
+        self.root.update()
+
+        # --- 1. RENAME FOLDERS WITH NUMBER PREFIX (ALWAYS ACTIVE) ---
+        renamed_paths = []
+        for idx, folder in enumerate(folders):
+            parent = os.path.dirname(folder)
+            basename = os.path.basename(folder)
+            new_basename = f"{idx+1}. {basename}"
+            new_path = os.path.join(parent, new_basename)
+            try:
+                if folder != new_path:
+                    os.rename(folder, new_path)
+                    renamed_paths.append(new_path)
+                else:
+                    renamed_paths.append(folder)
+            except Exception as e:
+                messagebox.showerror("Rename Error", f"Failed to rename:\n{folder}\n\n{str(e)}")
+                self.status_label.config(text=TRANSLATIONS[self.lang_code]["status_ready"])
+                return
+
+        # Update internal list with new paths
+        self.number_folders_data.clear()
+        self.number_folders_data.extend(renamed_paths)
+        self.refresh_generic_list(self.number_listbox, self.number_folders_data, keep_scroll=False)
+
+        # --- 2. APPLY TIMESTAMP MODIFICATION ---
+        exts = ('.flac', '.mp3', '.wav', '.aiff', '.m4a', '.ogg', '.wma', '.opus', '.dsd', '.dsf')
+        curr_mod = start_mod
+        curr_cre = start_cre
+        count_folders = 0
+        count_files = 0
+
+        for folder in renamed_paths:
+            # Set folder timestamps
+            ts_folder_mod = curr_mod.timestamp()
+            ts_folder_cre = curr_cre.timestamp() if use_cre else ts_folder_mod
+            try:
+                os.utime(folder, (ts_folder_mod, ts_folder_mod))
+                if use_cre:
+                    set_file_creation_time(folder, ts_folder_cre)
+                count_folders += 1
+            except:
+                pass
+
+            file_count = 0
+            if sync_content:
+                curr_file_mod = curr_mod
+                curr_file_cre = curr_cre if use_cre else curr_file_mod
+                for root, dirs, files in os.walk(folder):
+                    for file in files:
+                        if file.lower().endswith(exts):
+                            fpath = os.path.join(root, file)
+                            try:
+                                ts_f_mod = curr_file_mod.timestamp()
+                                os.utime(fpath, (ts_f_mod, ts_f_mod))
+                                if use_cre:
+                                    ts_f_cre = curr_file_cre.timestamp() if use_cre else ts_f_mod
+                                    set_file_creation_time(fpath, ts_f_cre)
+                                curr_file_mod += delta_file
+                                if use_cre and cre_mode == "custom":
+                                    curr_file_cre += delta_file
+                                file_count += 1
+                                count_files += 1
+                            except:
+                                pass
+                if file_count > 0:
+                    last_file_time = curr_file_mod - delta_file
+                else:
+                    last_file_time = curr_mod
+            else:
+                last_file_time = curr_mod
+
+            # Compute next folder start
+            next_start = curr_mod + delta_folder
+            while next_start <= last_file_time:
+                next_start += delta_folder
+
+            # Apply rounding rule (ALWAYS ON, threshold 60)
+            if file_count > threshold:
+                next_start = next_start.replace(minute=0, second=0, microsecond=0) + timedelta(hours=1)
+
+            actual_jump = next_start - curr_mod
+            curr_mod = next_start
+            if use_cre:
+                curr_cre += actual_jump
+
+        self.status_label.config(text=TRANSLATIONS[self.lang_code]["status_done"])
+        msg = f"Renamed {len(renamed_paths)} folders.\nProcessed {count_folders} folders and {count_files} files."
+        messagebox.showinfo("Success", msg)
+
+    # --- TAB 1 BROWSE ---
+    def t1_browse(self):
+        f = filedialog.askdirectory()
+        if f: self.t1_path_var.set(f)
+
+    # --- TOGGLE CONTROLS ---
+    def t1_toggle_cre(self):
+        st = "normal" if self.t1_use_cre.get() else "disabled"
+        self.t1_rb_sync.config(state=st)
+        self.t1_rb_custom.config(state=st)
+        self.t1_toggle_inputs()
+    
+    def t1_toggle_inputs(self):
+        st = "normal" if self.t1_use_cre.get() and self.t1_cre_mode.get() == "custom" else "disabled"
+        for w in self.t1_fr_cre_inp.winfo_children():
+            if isinstance(w, tk.Button): w.config(state=st)
+            else:
+                for c in w.winfo_children():
+                    for s in c.winfo_children(): s.config(state=st)
+
+    def t2_toggle_cre(self):
+        st = "normal" if self.t2_use_cre.get() else "disabled"
+        self.t2_rb_sync.config(state=st)
+        self.t2_rb_custom.config(state=st)
+        self.t2_toggle_inputs()
+    
+    def t2_toggle_inputs(self):
+        st = "normal" if self.t2_use_cre.get() and self.t2_cre_mode.get() == "custom" else "disabled"
+        for w in self.t2_fr_cre_inp.winfo_children():
+            if isinstance(w, tk.Button): w.config(state=st)
+            else:
+                for c in w.winfo_children():
+                    for s in c.winfo_children(): s.config(state=st)
+
+    def t3_toggle_cre(self):
+        st = "normal" if self.t3_use_cre.get() else "disabled"
+        self.t3_rb_sync.config(state=st)
+        self.t3_rb_custom.config(state=st)
+        self.t3_toggle_inputs()
+    
+    def t3_toggle_inputs(self):
+        st = "normal" if self.t3_use_cre.get() and self.t3_cre_mode.get() == "custom" else "disabled"
+        for w in self.t3_fr_cre_inp.winfo_children():
+            if isinstance(w, tk.Button): w.config(state=st)
+            else:
+                for c in w.winfo_children():
+                    for s in c.winfo_children(): s.config(state=st)
+
+    # --- SHARED MENU & UI ---
+    def setup_menu(self):
+        self.lang_menu = tk.Menu(self.menu_bar, tearoff=0)
+        self.menu_bar.add_cascade(label="Language", menu=self.lang_menu)
+        self.lang_var = tk.StringVar(value="en")
+        for txt, code in [("English", "en"), ("Bahasa Indonesia", "id"), ("Japanese", "jp"), ("Chinese", "cn"), ("Russian", "ru")]:
+            self.lang_menu.add_radiobutton(label=txt, variable=self.lang_var, value=code, command=self.on_lang_change)
+        self.help_menu = tk.Menu(self.menu_bar, tearoff=0)
+        self.menu_bar.add_cascade(label="Help", menu=self.help_menu)
+        self.help_menu.add_command(label="Info", command=lambda: messagebox.showinfo("Info", TRANSLATIONS[self.lang_code]["help_body"]))
+
+    def on_lang_change(self):
+        self.change_language(self.lang_var.get())
+
+    def change_language(self, code):
+        self.lang_code = code
+        t = TRANSLATIONS[code]
+        self.root.title(t["app_title"])
+        self.lbl_title.config(text=t["app_title"])
+        self.lbl_subtitle.config(text=t["sub_title"])
+        self.notebook.tab(0, text=t["tab_file"])
+        self.notebook.tab(1, text=t["tab_folder"])
+        self.notebook.tab(2, text=t["tab_sort_file"])
+        self.notebook.tab(3, text=t["tab_number"])
+
+        # Tab 1
+        self.fr1_path.config(text=t["frame_1"])
+        self.fr1_date.config(text=t["frame_2"])
+        self.fr1_int.config(text=t["frame_3"])
+        self.fr1_cre.config(text=t["frame_4"])
+        self.t1_btn_browse.config(text=t["btn_browse"])
+        self.t1_btn_clear.config(text=t["btn_clear"])
+        self.t1_btn_now.config(text=t["btn_set_now"])
+        self.t1_lbl_int.config(text=t["lbl_interval"])
+        self.t1_chk_cre.config(text=t["chk_create"])
+        self.t1_rb_sync.config(text=t["rb_sync"])
+        self.t1_rb_custom.config(text=t["rb_custom"])
+        self.t1_btn_run.config(text=t["btn_run_file"])
+
+        # Tab 2
+        self.t2_lbl_list.config(text=t["lbl_list"])
+        self.t2_lbl_tip.config(text=t["lbl_tip"])
+        self.t2_btn_add.config(text=t["btn_add"])
+        self.t2_btn_del.config(text=t["btn_remove"])
+        self.t2_btn_clr.config(text=t["btn_clear_list"])
+        self.t2_btn_up.config(text=t["btn_up"])
+        self.t2_btn_down.config(text=t["btn_down"])
+        self.fr2_date.config(text=t["frame_2"])
+        self.t2_btn_now.config(text=t["btn_set_now"])
+        self.fr2_int_folder.config(text=t["frame_int_folder"])
+        self.t2_lbl_int_folder.config(text=t["lbl_int_folder"])
+        self.fr2_int_file.config(text=t["frame_int_file"])
+        self.t2_lbl_int_file.config(text=t["lbl_int_file"])
+
+        # fr2_cre (Date Created + Process files inside)
+        self.fr2_cre.config(text=t["frame_4_folder"])
+        self.t2_chk_cre.config(text=t["chk_create"])
+        self.t2_rb_sync.config(text=t["rb_sync"])
+        self.t2_rb_custom.config(text=t["rb_custom"])
+        self.t2_btn_cre_now.config(text=t["btn_set_now"])
+        # Process files inside
+        self.t2_chk_sync.config(text=t["chk_sync_content"])
+        self.t2_lbl_sync_hint.config(text=t["lbl_sync_hint"])
+
+        self.t2_btn_run.config(text=t["btn_run_folder"])
+
+        # Tab 3
+        self.t3_lbl_list.config(text=t["lbl_list"])
+        self.t3_lbl_tip.config(text=t["lbl_tip"])
+        self.t3_btn_add.config(text=t["btn_add"])
+        self.t3_btn_del.config(text=t["btn_remove"])
+        self.t3_btn_clr.config(text=t["btn_clear_list"])
+        self.t3_btn_up.config(text=t["btn_up"])
+        self.t3_btn_down.config(text=t["btn_down"])
+        
+        self.t3_lbl_tools.config(text=t["lbl_tools"])
+        self.t3_btn_reverse.config(text=t["btn_reverse"])
+        self.t3_btn_sort_name.config(text=t["btn_sort_name"])
+        self.t3_btn_sort_old.config(text=t["btn_sort_date_old"])
+        self.t3_btn_sort_new.config(text=t["btn_sort_date_new"])
+
+        self.fr3_date.config(text=t["frame_2"])
+        self.t3_btn_now.config(text=t["btn_set_now"])
+        self.fr3_int.config(text=t["frame_3"])
+        self.t3_lbl_int.config(text=t["lbl_interval"])
+        self.fr3_cre.config(text=t["frame_4"])
+        self.t3_chk_cre.config(text=t["chk_create"])
+        self.t3_rb_sync.config(text=t["rb_sync"])
+        self.t3_rb_custom.config(text=t["rb_custom"])
+        self.t3_btn_cre_now.config(text=t["btn_set_now"])
+        self.t3_btn_run.config(text=t["btn_run_sort_file"])
+
+        # Tab 4
+        self.t4_lbl_list.config(text=t["lbl_list"])
+        self.t4_lbl_tip.config(text=t["lbl_tip"])
+        self.t4_btn_add.config(text=t["btn_add"])
+        self.t4_btn_del.config(text=t["btn_remove"])
+        self.t4_btn_clr.config(text=t["btn_clear_list"])
+        self.t4_btn_up.config(text=t["btn_up"])
+        self.t4_btn_down.config(text=t["btn_down"])
+
+        self.fr4_date.config(text=t["frame_2"])
+        self.t4_btn_now.config(text=t["btn_set_now"])
+        self.fr4_int_folder.config(text=t["frame_int_folder"])
+        self.t4_lbl_int_folder.config(text=t["lbl_int_folder"])
+        self.fr4_int_file.config(text=t["frame_int_file"])
+        self.t4_lbl_int_file.config(text=t["lbl_int_file"])
+
+        # fr4_cre (Date Created + Process files inside)
+        self.fr4_cre.config(text=t["frame_4_folder"])
+        self.t4_chk_cre.config(text=t["chk_create"])
+        self.t4_rb_sync.config(text=t["rb_sync"])
+        self.t4_rb_custom.config(text=t["rb_custom"])
+        self.t4_btn_cre_now.config(text=t["btn_set_now"])
+        # Process files inside
+        self.t4_chk_sync.config(text=t["chk_sync_content"])
+        self.t4_lbl_sync_hint.config(text=t["lbl_sync_hint"])
+
+        self.t4_btn_run.config(text=t["btn_run_folder"])
+
+        self.status_label.config(text=t["status_ready"])
+        self.update_combobox(self.t1_int_unit, t["units"])
+        self.update_combobox(self.t2_int_unit_f, t["units"])
+        self.update_combobox(self.t2_int_unit_i, t["units"])
+        self.update_combobox(self.t3_int_unit, t["units"])
+        self.update_combobox(self.t4_int_unit_f, t["units"])
+        self.update_combobox(self.t4_int_unit_i, t["units"])
+        
+        keys = ["lbl_thn", "lbl_bln", "lbl_tgl", "lbl_jam", "lbl_mnt", "lbl_dtk"]
+        self.update_date_labels(self.t1_mod_entries, t, keys)
+        self.update_date_labels(self.t1_cre_entries, t, keys)
+        self.update_date_labels(self.t2_mod_entries, t, keys)
+        self.update_date_labels(self.t2_cre_entries, t, keys)
+        self.update_date_labels(self.t3_mod_entries, t, keys)
+        self.update_date_labels(self.t3_cre_entries, t, keys)
+        self.update_date_labels(self.t4_mod_entries, t, keys)
+        self.update_date_labels(self.t4_cre_entries, t, keys)
+
+    def update_combobox(self, combo, values):
+        idx = combo.current()
+        combo.config(values=values)
+        if idx == -1: combo.current(1)
+        else: combo.current(idx)
+
+    def create_date_inputs(self, parent):
+        entries = {}
+        variables = {}
+        labels = ["Thn", "Bln", "Tgl", "Jam", "Mnt", "Dtk"]
+        defaults = [2025, 1, 1, 12, 0, 0]
+        limits = {"Thn": (1980, 2099), "Bln": (1, 12), "Tgl": (1, 31), "Jam": (0, 23), "Mnt": (0, 59), "Dtk": (0, 59)}
+        frame = tk.Frame(parent)
+        frame.pack()
+        def update_days(*args):
+            try:
+                y, m = variables["Thn"].get(), variables["Bln"].get()
+                m = max(1, min(12, m))
+                _, max_d = calendar.monthrange(y, m)
+                entries["Tgl"].config(to=max_d)
+                if variables["Tgl"].get() > max_d: variables["Tgl"].set(max_d)
+            except: pass
+        for i, (lbl, val) in enumerate(zip(labels, defaults)):
+            f = tk.Frame(frame); f.grid(row=0, column=i, padx=2)
+            tk.Label(f, text=lbl, font=("Arial", 7)).pack()
+            mn, mx = limits[lbl]
+            var = tk.IntVar(value=val); variables[lbl] = var
+            e = tk.Spinbox(f, from_=mn, to=mx, width=4, wrap=True, textvariable=var)
+            e.pack()
+            entries[lbl] = e
+            if lbl in ["Thn", "Bln"]: var.trace_add("write", update_days)
+        update_days()
+        return entries, variables
+
+    def update_date_labels(self, entries, t, keys):
+        l_map = {k: t[v] for k, v in zip(["Thn", "Bln", "Tgl", "Jam", "Mnt", "Dtk"], keys)}
+        for k, w in entries.items():
+            for c in w.master.winfo_children():
+                if isinstance(c, tk.Label): c.config(text=l_map[k])
+
+    def set_current_time(self, vars_dict):
+        n = datetime.now()
+        for k, v in zip(["Thn", "Bln", "Tgl", "Jam", "Mnt", "Dtk"], [n.year, n.month, n.day, n.hour, n.minute, n.second]):
+            vars_dict[k].set(v)
+
+    def get_date(self, vars_dict):
+        try:
+            return datetime(vars_dict["Thn"].get(), vars_dict["Bln"].get(), vars_dict["Tgl"].get(),
+                           vars_dict["Jam"].get(), vars_dict["Mnt"].get(), vars_dict["Dtk"].get())
+        except:
+            return None
+
+    def update_interval_limit(self, combo, spinbox):
+        idx = combo.current()
+        limit = 23 if idx == 2 else (59 if idx < 2 else 999)
+        spinbox.config(to=limit)
+        try:
+            if int(spinbox.get()) > limit: spinbox.delete(0, "end"); spinbox.insert(0, str(limit))
+        except: pass
+
+    def get_delta(self, val_w, unit_w):
+        val = int(val_w.get())
+        idx = unit_w.current()
+        if idx == 0: return timedelta(seconds=val)
+        if idx == 1: return timedelta(minutes=val)
+        if idx == 2: return timedelta(hours=val)
+        return timedelta(days=val)
+
+    # --- TAB 2 & 3 DROP HANDLERS ---
+    def drop_data_folder(self, event):
+        raw_data = event.data
+        paths = re.findall(r'\{.*?\}|\S+', raw_data)
+        for p in paths:
+            clean_path = p.strip("{}")
+            if os.path.isdir(clean_path):
+                if clean_path not in self.folder_data: self.folder_data.append(clean_path)
+        self.refresh_generic_list(self.folder_listbox, self.folder_data, keep_scroll=False)
+
+    def t2_add_folder(self):
+        parent_folder = filedialog.askdirectory() 
+        if parent_folder:
+            try:
+                subfolders = [os.path.join(parent_folder, d) for d in os.listdir(parent_folder) if os.path.isdir(os.path.join(parent_folder, d))]
+                if subfolders:
+                    t = TRANSLATIONS[self.lang_code]
+                    msg = t["msg_smart_body"].format(len(subfolders), os.path.basename(parent_folder))
+                    choice = messagebox.askyesno(t["msg_smart_title"], msg)
+                    if choice:
+                        for sub in subfolders:
+                            if sub not in self.folder_data: self.folder_data.append(sub)
+                    else:
+                        if parent_folder not in self.folder_data: self.folder_data.append(parent_folder)
+                else:
+                    if parent_folder not in self.folder_data: self.folder_data.append(parent_folder)
+                self.refresh_generic_list(self.folder_listbox, self.folder_data, keep_scroll=False)
+            except Exception as e:
+                messagebox.showerror("Error", str(e))
+
+    def t2_del_folder(self):
+        sels = self.folder_listbox.curselection()
+        if not sels: return
+        idx_list = [int(i) for i in sels]
+        for i in sorted(idx_list, reverse=True):
+            del self.folder_data[i]
+        self.refresh_generic_list(self.folder_listbox, self.folder_data, keep_scroll=False)
+        if len(self.folder_data) > 0 and idx_list:
+            new_sel = min(idx_list[0], len(self.folder_data) - 1)
+            self.folder_listbox.selection_set(new_sel)
+            self.folder_listbox.activate(new_sel)
+
+    def drop_data_file(self, event):
+        raw_data = event.data
+        paths = re.findall(r'\{.*?\}|\S+', raw_data)
+        exts = ('.flac', '.mp3', '.wav', '.aiff', '.m4a', '.ogg', '.wma', '.opus', '.dsd', '.dsf')
+        for p in paths:
+            clean_path = p.strip("{}")
+            if os.path.isfile(clean_path) and clean_path.lower().endswith(exts):
+                if clean_path not in self.file_sort_data: self.file_sort_data.append(clean_path)
+        self.refresh_generic_list(self.file_listbox, self.file_sort_data, keep_scroll=False)
+
+    def t3_add_files(self):
+        files = filedialog.askopenfilenames(filetypes=[("Audio Files", "*.mp3 *.flac *.wav *.m4a *.ogg *.wma *.opus *.dsd *.dsf")])
+        if files:
+            for f in files:
+                if f not in self.file_sort_data: self.file_sort_data.append(f)
+            self.refresh_generic_list(self.file_listbox, self.file_sort_data, keep_scroll=False)
+
+    def t3_del_file(self):
+        sels = self.file_listbox.curselection()
+        if not sels: return
+        idx_list = [int(i) for i in sels]
+        for i in sorted(idx_list, reverse=True):
+            del self.file_sort_data[i]
+        self.refresh_generic_list(self.file_listbox, self.file_sort_data, keep_scroll=False)
+        if len(self.file_sort_data) > 0 and idx_list:
+            new_sel = min(idx_list[0], len(self.file_sort_data) - 1)
+            self.file_listbox.selection_set(new_sel)
+            self.file_listbox.activate(new_sel)
+
+    def t3_reverse_list(self):
+        self.file_sort_data.reverse()
+        self.refresh_generic_list(self.file_listbox, self.file_sort_data, keep_scroll=False)
+
+    def t3_sort_by_name(self):
+        self.file_sort_data.sort(key=lambda f: os.path.basename(f).lower())
+        self.refresh_generic_list(self.file_listbox, self.file_sort_data, keep_scroll=False)
+
+    def t3_sort_by_date(self, reverse=False):
+        self.file_sort_data.sort(key=lambda f: os.path.getmtime(f), reverse=reverse)
+        self.refresh_generic_list(self.file_listbox, self.file_sort_data, keep_scroll=False)
 
 if __name__ == "__main__":
     root = TkinterDnD.Tk()
