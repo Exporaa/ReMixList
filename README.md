@@ -53,5 +53,16 @@ Fitur baru ReMixList v3.1 - Sort Files Manual
 
 <img width="641" height="982" alt="image" src="https://github.com/user-attachments/assets/704d165b-8b33-4692-a71b-ea04971fd072" />
 
+## ReMixList v4.5
+Fitur baru - File and Folder Numbering
+1. Tab baru: Number Files – penomoran otomatis file audio.
+2. Tombol NUMBER FILES! untuk proses rename + timestamp (Format rename: 1. Nama.ext, 2. Nama.ext, dst.)
+3. Pembersihan UI Tab 2 (Sort Folders):
+
+<img width="642" height="997" alt="image" src="https://github.com/user-attachments/assets/ffe2142d-4281-4f50-b86a-9ead3941e400" />
+<img width="643" height="998" alt="image" src="https://github.com/user-attachments/assets/9270ad33-794d-454d-bc65-2ce8e8add591" />
+
+
+
     
 **Cara pakai: Tinggal download yang (ReMixList.Exe) yang tertera, dan langsung pakai**
